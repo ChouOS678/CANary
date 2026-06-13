@@ -1,0 +1,8 @@
+matplotlib==3.9.2
+numpy==2.4.3
+scikit-learn==1.7.2
+streamlit==1.44.1
+joblib>=1.3.0
+plotly>=5.18.0
+psutil>=5.9.0
+fpdf2>=2.8.0

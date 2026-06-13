@@ -1,0 +1,40 @@
+分组：第1组 基线巡航组
+主题：稳态巡航中夹杂少量异常插针
+随机森林参数：
+  - n_estimators: 147
+  - max_depth: 8
+  - min_samples_split: 6
+  - min_samples_leaf: 3
+  - max_features: sqrt
+  - random_state: 41
+  - class_weight: balanced_subsample
+  - n_jobs: -1
+数据多样性参数：
+  - noise_scale: 1.16
+  - boundary_ratio: 0.12
+  - drift_ratio: 0.09
+  - label_noise_ratio: 0.015
+训练样本总数：20100
+训练类别分布：
+  - 安全: 3310
+  - 重放: 3356
+  - 欺骗: 3409
+  - DoS: 3348
+  - 模糊: 3352
+  - UDS非法会话: 3325
+输入窗口数量：6
+总线分布：
+  - can0: 4
+  - eth0: 2
+预期标签分布：
+  - 安全: 4
+  - 重放: 1
+  - 欺骗: 1
+预测标签分布：
+  - 安全: 4
+  - 重放: 1
+  - 欺骗: 1
+模型准确率：0.9638
+置信度区间：0.9771 / 0.9817 / 0.9831
+风险分数区间：0.0440 / 0.2885 / 0.7845
+误判窗口数：0

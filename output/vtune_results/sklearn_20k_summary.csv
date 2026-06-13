@@ -1,0 +1,186 @@
+Hierarchy Level	Metric Name	Metric Value
+0	Elapsed Time	2.859782
+1	Clockticks	29317213000
+2	Performance-core (P-core)	21234981000
+2	Efficient-core (E-core)	8082232000
+1	Instructions Retired	37163607000
+2	Performance-core (P-core)	26216262000
+2	Efficient-core (E-core)	10947345000
+1	CPI Rate	0.788869
+2	Performance-core (P-core)	0.809993
+2	Efficient-core (E-core)	0.738282
+1	MUX Reliability	0.998337
+1	Performance-core (P-core)	
+2	Retiring	24.7
+3	Light Operations	22.6
+4	FP Arithmetic	3.1
+5	FP x87	0.0
+5	FP Scalar	3.1
+5	FP Vector	0.0
+6	128-bit FP Vector	0.0
+6	256-bit FP Vector	0.0
+4	Integer Operations	0.0
+5	128-bit Integer Vector Operations	0.0
+5	256-bit Vector Operations	0.0
+4	Memory Operations	11.2
+4	Fused Instructions	2.6
+4	Non Fused Branches	0.3
+4	Other	5.3
+5	Nop Instructions	0.0
+5	Shuffles_256b	0.0
+3	Heavy Operations	2.1
+4	Few Uops Instructions	2.1
+4	Microcode Sequencer	0.0
+5	Assists	0.0
+6	Page Faults	0.0
+6	FP Assists	0.0
+6	AVX Assists	0.0
+5	CISC	0.0
+2	Front-End Bound	22.2
+3	Front-End Latency	16.4
+4	ICache Misses	5.5
+5	Code L2 Hit	0.0
+5	Code L2 Miss	12.4
+4	ITLB Misses	2.5
+5	Code STLB Hit	1.5
+5	Code STLB Miss	1.1
+6	Code STLB Miss 4K	0.0
+6	Code STLB Miss 2M	0.0
+4	Branch Resteers	6.6
+5	Mispredicts Resteers	2.7
+5	Clears Resteers	3.9
+5	Unknown Branches	0.0
+4	MS Switches	0.0
+4	Length Changing Prefixes	0.0
+4	DSB Switches	3.4
+3	Front-End Bandwidth	5.8
+4	Front-End Bandwidth MITE	7.9
+5	Decoder-0 Alone	0.2
+4	Front-End Bandwidth DSB	6.0
+4	Front-End Bandwidth LSD	0.4
+4	MS	0.5
+4	(Info) DSB Coverage	80.4
+4	(Info) LSD Coverage	8.7
+4	(Info) DSB Misses	6.2
+2	Bad Speculation	39.1
+3	Branch Mispredict	15.9
+4	Other Mispredicts	1.6
+3	Machine Clears	23.2
+4	Other Nukes	23.2
+2	Back-End Bound	14.0
+3	Memory Bound	8.6
+4	L1 Bound	23.0
+5	DTLB Overhead	6.4
+6	Load STLB Hit	3.7
+6	Load STLB Miss	2.7
+7	Load STLB Miss 4K	0.0
+7	Load STLB Miss 2M	0.0
+7	Load STLB Miss 1G	0.0
+5	Loads Blocked by Store Forwarding	0.0
+5	L1 Latency Dependency	13.5
+5	Lock Latency	7.9
+5	Split Loads	0.0
+5	FB Full	0.3
+4	L2 Bound	0.2
+5	L2 Hit Latency	6.4
+4	L3 Bound	6.8
+5	L3 Latency	2.1
+5	SQ Full	0.0
+4	DRAM Bound	9.5
+5	Memory Bandwidth	16.2
+5	Memory Latency	23.9
+4	Store Bound	0.0
+5	Store Latency	6.5
+5	Split Stores	0.0
+5	DTLB Store Overhead	3.6
+6	Store STLB Hit	3.2
+6	Store STLB Miss	0.4
+7	Store STLB Miss 4K	0.0
+7	Store STLB Miss 2M	0.0
+7	Store STLB Miss 1G	0.0
+3	Core Bound	5.3
+4	Divider	1.2
+5	FP Divider	1.2
+5	INT Divider	0.0
+4	Serializing Operations	3.2
+5	Slow Pause	0.0
+5	C01 Wait	0.0
+5	C02 Wait	0.0
+5	Memory Fence	0.0
+4	Port Utilization	21.3
+5	Cycles of 0 Ports Utilized	0.1
+6	Mixing Vectors	0.0
+5	Cycles of 1 Port Utilized	15.5
+5	Cycles of 2 Ports Utilized	12.4
+5	Cycles of 3+ Ports Utilized	22.7
+6	ALU Operation Utilization	17.6
+7	Port 0	19.1
+7	Port 1	13.3
+7	Port 6	30.3
+6	Load Operation Utilization	19.5
+6	Store Operation Utilization	17.5
+5	Vector Capacity Usage (FPU)	11.8
+1	Efficient-core (E-core)	
+2	Retiring	28.6
+3	Arith Ops	16.7
+4	Non Divider	16.7
+4	FP Divide	0.0
+4	Int Divider	0.0
+3	Mem Ops	12.0
+4	Loads	7.8
+4	Stores	4.1
+2	Front-End Bound	15.5
+3	IFetch Latency	1.4
+4	ICache Misses	0.5
+4	ITLB Misses	0.2
+4	BACLEARS	0.2
+4	Branch Resteers	0.3
+3	IFetch Bandwidth	14.1
+4	Cisc	0.9
+4	Decode	9.8
+4	Pre-Decode Wrong	0.0
+4	Front-End Other	3.8
+2	Bad Speculation	25.1
+3	Branch Mispredict	21.9
+3	Machine Clears	3.3
+4	Ucode_Assist	0.0
+4	Machine_Restart	3.8
+2	Back-End Bound	30.7
+3	Memory Subsystem Bound	9.4
+4	L2 Bound	1.3
+4	L2 Miss	7.6
+5	L3 Bound	6.7
+5	Memory Bound	1.0
+3	Core Bound	21.4
+4	Serializing Operations	1.3
+5	Pause	0.4
+5	TPause	0.0
+4	L1 Bound	7.3
+4	RB Bound	0.1
+4	Store Bound	1.3
+4	Execution Bound	10.7
+4	Allocation Bound	0.7
+5	Allocation Restriction	0.7
+2	Info Metrics	
+3	Stores Bound	0.013301
+3	Load Bound	0.166886
+1	Average CPU Frequency	3640310694.085423
+1	Total Thread Count	52
+1	Paused Time	0.0
+0	Effective Physical Core Utilization	16.4% (1.970 out of 12)
+1	Effective Logical Core Utilization	17.6% (2.814 out of 16)
+0	Collection and Platform Info	
+1	Application Command Line	D:\Users\35239\PycharmProjects\AI_Project\.venv_web313\Scripts\python.exe "D:\Users\35239\PycharmProjects\AI_Project\_wsl_cache_measure.py" "--algo" "sklearn" "--samples" "20000" 
+1	Operating System	Microsoft Windows 11
+1	Computer Name	ChouGrok
+1	Result Size	53942573
+1	Collection start time	17:29:43 13/06/2026 UTC
+1	Collection stop time	17:29:46 13/06/2026 UTC
+1	Collector Type	Event-based sampling driver
+1	CPU	
+2	Name	Intel(R) microarchitecture code named Raptorlake-P
+2	Frequency	3187201036
+2	Logical CPU Count	16
+2	Cache Allocation Technology	
+3	Level 2 capability	not detected
+3	Level 3 capability	not detected

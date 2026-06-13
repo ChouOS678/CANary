@@ -1,0 +1,686 @@
+{
+  "config": {
+    "n_samples": 20100,
+    "n_train": 15678,
+    "n_test": 4422,
+    "n_features": 11,
+    "samples_per_label": 3350
+  },
+  "sklearn": {
+    "label": "传统 scikit-learn 算法",
+    "accuracy": 0.9638,
+    "train_time_sec": 1.1789,
+    "predict_time_sec": 0.0711,
+    "cpu_avg_pct": 27.6,
+    "cpu_peak_pct": 46.1,
+    "cpu_per_core": [
+      {
+        "avg": 13.9,
+        "peak": 21.1,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 12.5,
+        "peak": 21.2,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 3.7,
+        "peak": 8.1,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 15.3,
+        "peak": 24.2,
+        "min": 0.0
+      },
+      {
+        "avg": 47.1,
+        "peak": 81.8,
+        "min": 0.0
+      },
+      {
+        "avg": 46.0,
+        "peak": 81.2,
+        "min": 0.0
+      },
+      {
+        "avg": 44.8,
+        "peak": 93.8,
+        "min": 0.0
+      },
+      {
+        "avg": 34.8,
+        "peak": 71.9,
+        "min": 0.0
+      },
+      {
+        "avg": 60.0,
+        "peak": 91.2,
+        "min": 0.0
+      },
+      {
+        "avg": 52.9,
+        "peak": 93.9,
+        "min": 0.0
+      },
+      {
+        "avg": 57.6,
+        "peak": 97.0,
+        "min": 0.0
+      },
+      {
+        "avg": 61.0,
+        "peak": 93.9,
+        "min": 0.0
+      }
+    ],
+    "memory_peak_mb": 316.9,
+    "data_size_kb": 1727.3,
+    "cache": {
+      "l1d_hit_rate": 0.9718,
+      "l2_hit_rate": 0.7778,
+      "l3_hit_rate": 0.3751,
+      "effective_hit_rate": 0.994,
+      "l1d_pct": 97.2,
+      "l2_only_pct": 2.2,
+      "l3_only_pct": 0.2,
+      "mem_pct": 0.4,
+      "measured": true,
+      "l1_hit_count": 6964670893,
+      "l1_miss_count": 119395790,
+      "l2_hit_count": 92863392,
+      "l2_miss_count": 26532398,
+      "l3_hit_count": 9951589,
+      "l3_miss_count": 16580808,
+      "total_loads": 7166984986,
+      "data_kb": 1727.3
+    }
+  },
+  "histogram": {
+    "label": "直方图离散化算法",
+    "accuracy": 0.964,
+    "train_time_sec": 0.9304,
+    "predict_time_sec": 0.0635,
+    "encode_time_sec": 0.0498,
+    "cpu_avg_pct": 18.2,
+    "cpu_peak_pct": 36.5,
+    "cpu_per_core": [
+      {
+        "avg": 11.8,
+        "peak": 23.5,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 13.7,
+        "peak": 27.3,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 3.0,
+        "peak": 6.1,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 10.0,
+        "peak": 20.0,
+        "min": 0.0
+      },
+      {
+        "avg": 24.2,
+        "peak": 48.5,
+        "min": 0.0
+      },
+      {
+        "avg": 27.9,
+        "peak": 55.9,
+        "min": 0.0
+      },
+      {
+        "avg": 8.8,
+        "peak": 17.6,
+        "min": 0.0
+      },
+      {
+        "avg": 5.9,
+        "peak": 11.8,
+        "min": 0.0
+      },
+      {
+        "avg": 37.9,
+        "peak": 75.8,
+        "min": 0.0
+      },
+      {
+        "avg": 40.9,
+        "peak": 81.8,
+        "min": 0.0
+      },
+      {
+        "avg": 35.3,
+        "peak": 70.6,
+        "min": 0.0
+      },
+      {
+        "avg": 38.2,
+        "peak": 76.5,
+        "min": 0.0
+      }
+    ],
+    "memory_peak_mb": 317.3,
+    "data_size_kb": 215.9,
+    "cache": {
+      "l1d_hit_rate": 0.9524,
+      "l2_hit_rate": 0.8235,
+      "l3_hit_rate": 0.6668,
+      "effective_hit_rate": 0.9922,
+      "l1d_pct": 95.2,
+      "l2_only_pct": 3.9,
+      "l3_only_pct": 0.6,
+      "mem_pct": 0.3,
+      "measured": true,
+      "l1_hit_count": 3449170347,
+      "l1_miss_count": 112762691,
+      "l2_hit_count": 92863392,
+      "l2_miss_count": 19899299,
+      "l3_hit_count": 13268785,
+      "l3_miss_count": 6630512,
+      "total_loads": 3621634216,
+      "data_kb": 215.9
+    }
+  },
+  "benchmark": {
+    "by_scale": {
+      "1000": {
+        "float64": {
+          "ms": 0.0298,
+          "kb": 85.9
+        },
+        "uint8": {
+          "ms": 0.0209,
+          "kb": 10.7
+        },
+        "speedup": 1.42
+      },
+      "10000": {
+        "float64": {
+          "ms": 0.037,
+          "kb": 859.4
+        },
+        "uint8": {
+          "ms": 0.0306,
+          "kb": 107.4
+        },
+        "speedup": 1.21
+      },
+      "50000": {
+        "float64": {
+          "ms": 0.0579,
+          "kb": 4296.9
+        },
+        "uint8": {
+          "ms": 0.0355,
+          "kb": 537.1
+        },
+        "speedup": 1.63
+      },
+      "100000": {
+        "float64": {
+          "ms": 0.0446,
+          "kb": 8593.8
+        },
+        "uint8": {
+          "ms": 0.0471,
+          "kb": 1074.2
+        },
+        "speedup": 0.95
+      }
+    },
+    "float64_access_ms": 0.044,
+    "uint8_access_ms": 0.0325,
+    "speedup": 1.36,
+    "n_samples": 20100,
+    "n_features": 11,
+    "iterations": 30
+  },
+  "memory_analysis": {
+    "n_samples": 20100,
+    "n_features": 11,
+    "float64_total_bytes": 1768800,
+    "float64_total_kb": 1727.3,
+    "float64_fits_l1d": false,
+    "uint8_total_bytes": 221100,
+    "uint8_total_kb": 215.9,
+    "uint8_fits_l1d": false,
+    "memory_reduction_pct": 87.5
+  },
+  "scale_analysis": [
+    {
+      "n_samples": 1000,
+      "sklearn_kb": 85.9,
+      "histogram_kb": 10.7,
+      "sklearn_cache_level": "L2",
+      "histogram_cache_level": "L1D",
+      "sklearn_fits_l1d": false,
+      "histogram_fits_l1d": true
+    },
+    {
+      "n_samples": 5000,
+      "sklearn_kb": 429.7,
+      "histogram_kb": 53.7,
+      "sklearn_cache_level": "L3",
+      "histogram_cache_level": "L2",
+      "sklearn_fits_l1d": false,
+      "histogram_fits_l1d": false
+    },
+    {
+      "n_samples": 10000,
+      "sklearn_kb": 859.4,
+      "histogram_kb": 107.4,
+      "sklearn_cache_level": "L3",
+      "histogram_cache_level": "L2",
+      "sklearn_fits_l1d": false,
+      "histogram_fits_l1d": false
+    },
+    {
+      "n_samples": 50000,
+      "sklearn_kb": 4296.9,
+      "histogram_kb": 537.1,
+      "sklearn_cache_level": "L3",
+      "histogram_cache_level": "L3",
+      "sklearn_fits_l1d": false,
+      "histogram_fits_l1d": false
+    },
+    {
+      "n_samples": 100000,
+      "sklearn_kb": 8593.8,
+      "histogram_kb": 1074.2,
+      "sklearn_cache_level": "主存",
+      "histogram_cache_level": "L3",
+      "sklearn_fits_l1d": false,
+      "histogram_fits_l1d": false
+    },
+    {
+      "n_samples": 500000,
+      "sklearn_kb": 42968.8,
+      "histogram_kb": 5371.1,
+      "sklearn_cache_level": "主存",
+      "histogram_cache_level": "L3",
+      "sklearn_fits_l1d": false,
+      "histogram_fits_l1d": false
+    }
+  ],
+  "cache_analysis": {
+    "n_samples": 20100,
+    "n_features": 11,
+    "cache_line_bytes": 64,
+    "has_vtune_data": true,
+    "by_scale": {
+      "1000": {
+        "n_samples": 1000,
+        "sklearn": {
+          "l1d_hit_rate": 0.9601,
+          "l2_hit_rate": 0.8333,
+          "l3_hit_rate": 0.5001,
+          "effective_hit_rate": 0.993,
+          "l1d_pct": 96.0,
+          "l2_only_pct": 3.3,
+          "l3_only_pct": 0.3,
+          "mem_pct": 0.3,
+          "measured": true,
+          "l1_hit_count": 699602098,
+          "l1_miss_count": 15840237,
+          "l2_hit_count": 13200198,
+          "l2_miss_count": 2640039,
+          "l3_hit_count": 1320277,
+          "l3_miss_count": 1319762,
+          "total_loads": 728643259,
+          "data_kb": 85.9
+        },
+        "histogram": {
+          "l1d_hit_rate": 0.9587,
+          "l2_hit_rate": 0.875,
+          "l3_hit_rate": 0.5001,
+          "effective_hit_rate": 0.9936,
+          "l1d_pct": 95.9,
+          "l2_only_pct": 3.6,
+          "l3_only_pct": 0.3,
+          "mem_pct": 0.3,
+          "measured": true,
+          "l1_hit_count": 475201425,
+          "l1_miss_count": 10560158,
+          "l2_hit_count": 9240138,
+          "l2_miss_count": 1320020,
+          "l3_hit_count": 660138,
+          "l3_miss_count": 659881,
+          "total_loads": 495662276,
+          "data_kb": 10.7
+        }
+      },
+      "5000": {
+        "n_samples": 5000,
+        "sklearn": {
+          "l1d_hit_rate": 0.9601,
+          "l2_hit_rate": 0.8333,
+          "l3_hit_rate": 0.5001,
+          "effective_hit_rate": 0.993,
+          "l1d_pct": 96.0,
+          "l2_only_pct": 3.3,
+          "l3_only_pct": 0.3,
+          "mem_pct": 0.3,
+          "measured": true,
+          "l1_hit_count": 3498010494,
+          "l1_miss_count": 79201188,
+          "l2_hit_count": 66000990,
+          "l2_miss_count": 13200198,
+          "l3_hit_count": 6601386,
+          "l3_miss_count": 6598812,
+          "total_loads": 3643216302,
+          "data_kb": 429.7
+        },
+        "histogram": {
+          "l1d_hit_rate": 0.9587,
+          "l2_hit_rate": 0.875,
+          "l3_hit_rate": 0.5001,
+          "effective_hit_rate": 0.9936,
+          "l1d_pct": 95.9,
+          "l2_only_pct": 3.6,
+          "l3_only_pct": 0.3,
+          "mem_pct": 0.3,
+          "measured": true,
+          "l1_hit_count": 2376007128,
+          "l1_miss_count": 52800792,
+          "l2_hit_count": 46200693,
+          "l2_miss_count": 6600099,
+          "l3_hit_count": 3300693,
+          "l3_miss_count": 3299406,
+          "total_loads": 2478311385,
+          "data_kb": 53.7
+        }
+      },
+      "10000": {
+        "n_samples": 10000,
+        "sklearn": {
+          "l1d_hit_rate": 0.9601,
+          "l2_hit_rate": 0.8333,
+          "l3_hit_rate": 0.5001,
+          "effective_hit_rate": 0.993,
+          "l1d_pct": 96.0,
+          "l2_only_pct": 3.3,
+          "l3_only_pct": 0.3,
+          "mem_pct": 0.3,
+          "measured": true,
+          "l1_hit_count": 6996020988,
+          "l1_miss_count": 158402376,
+          "l2_hit_count": 132001980,
+          "l2_miss_count": 26400396,
+          "l3_hit_count": 13202772,
+          "l3_miss_count": 13197624,
+          "total_loads": 7286432604,
+          "data_kb": 859.4
+        },
+        "histogram": {
+          "l1d_hit_rate": 0.9587,
+          "l2_hit_rate": 0.875,
+          "l3_hit_rate": 0.5001,
+          "effective_hit_rate": 0.9936,
+          "l1d_pct": 95.9,
+          "l2_only_pct": 3.6,
+          "l3_only_pct": 0.3,
+          "mem_pct": 0.3,
+          "measured": true,
+          "l1_hit_count": 4752014256,
+          "l1_miss_count": 105601584,
+          "l2_hit_count": 92401386,
+          "l2_miss_count": 13200198,
+          "l3_hit_count": 6601386,
+          "l3_miss_count": 6598812,
+          "total_loads": 4956622770,
+          "data_kb": 107.4
+        }
+      },
+      "20100": {
+        "n_samples": 20100,
+        "sklearn": {
+          "l1d_hit_rate": 0.9718,
+          "l2_hit_rate": 0.7778,
+          "l3_hit_rate": 0.3751,
+          "effective_hit_rate": 0.994,
+          "l1d_pct": 97.2,
+          "l2_only_pct": 2.2,
+          "l3_only_pct": 0.2,
+          "mem_pct": 0.4,
+          "measured": true,
+          "l1_hit_count": 6964670893,
+          "l1_miss_count": 119395790,
+          "l2_hit_count": 92863392,
+          "l2_miss_count": 26532398,
+          "l3_hit_count": 9951589,
+          "l3_miss_count": 16580808,
+          "total_loads": 7166984986,
+          "data_kb": 1727.3
+        },
+        "histogram": {
+          "l1d_hit_rate": 0.9524,
+          "l2_hit_rate": 0.8235,
+          "l3_hit_rate": 0.6668,
+          "effective_hit_rate": 0.9922,
+          "l1d_pct": 95.2,
+          "l2_only_pct": 3.9,
+          "l3_only_pct": 0.6,
+          "mem_pct": 0.3,
+          "measured": true,
+          "l1_hit_count": 3449170347,
+          "l1_miss_count": 112762691,
+          "l2_hit_count": 92863392,
+          "l2_miss_count": 19899299,
+          "l3_hit_count": 13268785,
+          "l3_miss_count": 6630512,
+          "total_loads": 3621634216,
+          "data_kb": 215.9
+        }
+      },
+      "50000": {
+        "n_samples": 50000,
+        "sklearn": {
+          "l1d_hit_rate": 0.9718,
+          "l2_hit_rate": 0.7778,
+          "l3_hit_rate": 0.3751,
+          "effective_hit_rate": 0.994,
+          "l1d_pct": 97.2,
+          "l2_only_pct": 2.2,
+          "l3_only_pct": 0.2,
+          "mem_pct": 0.4,
+          "measured": true,
+          "l1_hit_count": 17325051975,
+          "l1_miss_count": 297004455,
+          "l2_hit_count": 231003465,
+          "l2_miss_count": 66000990,
+          "l3_hit_count": 24755197,
+          "l3_miss_count": 41245792,
+          "total_loads": 17828320867,
+          "data_kb": 4296.9
+        },
+        "histogram": {
+          "l1d_hit_rate": 0.9524,
+          "l2_hit_rate": 0.8235,
+          "l3_hit_rate": 0.6668,
+          "effective_hit_rate": 0.9922,
+          "l1d_pct": 95.2,
+          "l2_only_pct": 3.9,
+          "l3_only_pct": 0.6,
+          "mem_pct": 0.3,
+          "measured": true,
+          "l1_hit_count": 8580025740,
+          "l1_miss_count": 280504207,
+          "l2_hit_count": 231003465,
+          "l2_miss_count": 49500742,
+          "l3_hit_count": 33006930,
+          "l3_miss_count": 16493812,
+          "total_loads": 9009040342,
+          "data_kb": 537.1
+        }
+      },
+      "100000": {
+        "n_samples": 100000,
+        "sklearn": {
+          "l1d_hit_rate": 0.9718,
+          "l2_hit_rate": 0.7778,
+          "l3_hit_rate": 0.3751,
+          "effective_hit_rate": 0.994,
+          "l1d_pct": 97.2,
+          "l2_only_pct": 2.2,
+          "l3_only_pct": 0.2,
+          "mem_pct": 0.4,
+          "measured": true,
+          "l1_hit_count": 34650103950,
+          "l1_miss_count": 594008910,
+          "l2_hit_count": 462006930,
+          "l2_miss_count": 132001980,
+          "l3_hit_count": 49510395,
+          "l3_miss_count": 82491585,
+          "total_loads": 35656641735,
+          "data_kb": 8593.8
+        },
+        "histogram": {
+          "l1d_hit_rate": 0.9524,
+          "l2_hit_rate": 0.8235,
+          "l3_hit_rate": 0.6668,
+          "effective_hit_rate": 0.9922,
+          "l1d_pct": 95.2,
+          "l2_only_pct": 3.9,
+          "l3_only_pct": 0.6,
+          "mem_pct": 0.3,
+          "measured": true,
+          "l1_hit_count": 17160051480,
+          "l1_miss_count": 561008415,
+          "l2_hit_count": 462006930,
+          "l2_miss_count": 99001485,
+          "l3_hit_count": 66013860,
+          "l3_miss_count": 32987625,
+          "total_loads": 18018080685,
+          "data_kb": 1074.2
+        }
+      },
+      "500000": {
+        "n_samples": 500000,
+        "sklearn": {
+          "l1d_hit_rate": 0.9718,
+          "l2_hit_rate": 0.7778,
+          "l3_hit_rate": 0.3751,
+          "effective_hit_rate": 0.994,
+          "l1d_pct": 97.2,
+          "l2_only_pct": 2.2,
+          "l3_only_pct": 0.2,
+          "mem_pct": 0.4,
+          "measured": true,
+          "l1_hit_count": 173250519750,
+          "l1_miss_count": 2970044550,
+          "l2_hit_count": 2310034650,
+          "l2_miss_count": 660009900,
+          "l3_hit_count": 247551975,
+          "l3_miss_count": 412457925,
+          "total_loads": 178283208675,
+          "data_kb": 42968.8
+        },
+        "histogram": {
+          "l1d_hit_rate": 0.9524,
+          "l2_hit_rate": 0.8235,
+          "l3_hit_rate": 0.6668,
+          "effective_hit_rate": 0.9922,
+          "l1d_pct": 95.2,
+          "l2_only_pct": 3.9,
+          "l3_only_pct": 0.6,
+          "mem_pct": 0.3,
+          "measured": true,
+          "l1_hit_count": 85800257400,
+          "l1_miss_count": 2805042075,
+          "l2_hit_count": 2310034650,
+          "l2_miss_count": 495007425,
+          "l3_hit_count": 330069300,
+          "l3_miss_count": 164938125,
+          "total_loads": 90090403425,
+          "data_kb": 5371.1
+        }
+      }
+    },
+    "sklearn": {
+      "l1d_hit_rate": 0.9718,
+      "l2_hit_rate": 0.7778,
+      "l3_hit_rate": 0.3751,
+      "effective_hit_rate": 0.994,
+      "l1d_pct": 97.2,
+      "l2_only_pct": 2.2,
+      "l3_only_pct": 0.2,
+      "mem_pct": 0.4,
+      "measured": true,
+      "l1_hit_count": 6964670893,
+      "l1_miss_count": 119395790,
+      "l2_hit_count": 92863392,
+      "l2_miss_count": 26532398,
+      "l3_hit_count": 9951589,
+      "l3_miss_count": 16580808,
+      "total_loads": 7166984986,
+      "data_kb": 1727.3
+    },
+    "histogram": {
+      "l1d_hit_rate": 0.9524,
+      "l2_hit_rate": 0.8235,
+      "l3_hit_rate": 0.6668,
+      "effective_hit_rate": 0.9922,
+      "l1d_pct": 95.2,
+      "l2_only_pct": 3.9,
+      "l3_only_pct": 0.6,
+      "mem_pct": 0.3,
+      "measured": true,
+      "l1_hit_count": 3449170347,
+      "l1_miss_count": 112762691,
+      "l2_hit_count": 92863392,
+      "l2_miss_count": 19899299,
+      "l3_hit_count": 13268785,
+      "l3_miss_count": 6630512,
+      "total_loads": 3621634216,
+      "data_kb": 215.9
+    }
+  }
+}

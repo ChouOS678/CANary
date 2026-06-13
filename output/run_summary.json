@@ -1,0 +1,159 @@
+{
+  "group_id": "G1",
+  "group_name": "第1组 基线巡航组",
+  "theme": "稳态巡航中夹杂少量异常插针",
+  "rf_params": {
+    "n_estimators": 147,
+    "max_depth": 8,
+    "min_samples_split": 6,
+    "min_samples_leaf": 3,
+    "max_features": "sqrt",
+    "random_state": 41,
+    "class_weight": "balanced_subsample",
+    "n_jobs": -1
+  },
+  "data_profile": {
+    "noise_scale": 1.16,
+    "boundary_ratio": 0.12,
+    "drift_ratio": 0.09,
+    "label_noise_ratio": 0.015
+  },
+  "training_rows": 20100,
+  "training_label_counts": {
+    "安全": 3310,
+    "重放": 3356,
+    "欺骗": 3409,
+    "DoS": 3348,
+    "模糊": 3352,
+    "UDS非法会话": 3325
+  },
+  "window_count": 6,
+  "bus_counts": {
+    "can0": 4,
+    "eth0": 2
+  },
+  "expected_counts": {
+    "安全": 4,
+    "重放": 1,
+    "欺骗": 1
+  },
+  "predicted_counts": {
+    "安全": 4,
+    "重放": 1,
+    "欺骗": 1
+  },
+  "accuracy": 0.9638,
+  "confidence": {
+    "min": 0.9771,
+    "mean": 0.9817,
+    "max": 0.9831
+  },
+  "risk_score": {
+    "min": 0.044,
+    "mean": 0.2885,
+    "max": 0.7845
+  },
+  "misclassified_count": 0,
+  "misclassified_cases": [],
+  "hardware": {
+    "duration_sec": 0.51,
+    "samples": 2,
+    "cpu_total_pct": {
+      "avg": 20.6,
+      "peak": 41.3,
+      "min": 0.0
+    },
+    "cpu_per_core_pct": [
+      {
+        "avg": 7.2,
+        "peak": 14.3,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 10.0,
+        "peak": 20.0,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 1.5,
+        "peak": 3.0,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 4.7,
+        "peak": 9.4,
+        "min": 0.0
+      },
+      {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 39.4,
+        "peak": 78.8,
+        "min": 0.0
+      },
+      {
+        "avg": 39.7,
+        "peak": 79.4,
+        "min": 0.0
+      },
+      {
+        "avg": 47.0,
+        "peak": 93.9,
+        "min": 0.0
+      },
+      {
+        "avg": 45.5,
+        "peak": 90.9,
+        "min": 0.0
+      },
+      {
+        "avg": 40.9,
+        "peak": 81.8,
+        "min": 0.0
+      },
+      {
+        "avg": 34.9,
+        "peak": 69.7,
+        "min": 0.0
+      },
+      {
+        "avg": 32.4,
+        "peak": 64.7,
+        "min": 0.0
+      },
+      {
+        "avg": 29.4,
+        "peak": 58.8,
+        "min": 0.0
+      }
+    ],
+    "mem_system_pct": {
+      "avg": 77.3,
+      "peak": 77.3,
+      "min": 77.3
+    },
+    "proc_memory_mb": {
+      "avg": 248.2,
+      "peak": 256.6,
+      "min": 239.8
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "group_id": "G1",
+  "group_name": "第1组 基线巡航组",
+  "theme": "稳态巡航中夹杂少量异常插针",
+  "training_seed": 20260401,
+  "samples_per_label": 3350,
+  "data_profile": {
+    "noise_scale": 1.16,
+    "boundary_ratio": 0.12,
+    "drift_ratio": 0.09,
+    "label_noise_ratio": 0.015
+  },
+  "rf_params": {
+    "n_estimators": 147,
+    "max_depth": 8,
+    "min_samples_split": 6,
+    "min_samples_leaf": 3,
+    "max_features": "sqrt",
+    "random_state": 41,
+    "class_weight": "balanced_subsample",
+    "n_jobs": -1
+  },
+  "case_blueprints": [
+    {
+      "window_id": "G1-W01",
+      "timestamp": "2026-03-23T09:00:00",
+      "case_name": "巡航基线",
+      "bus": "can0",
+      "target_label": "安全",
+      "intensity": 0.92,
+      "packet_scale": 0.98,
+      "jitter": 0.74
+    },
+    {
+      "window_id": "G1-W02",
+      "timestamp": "2026-03-23T09:05:00",
+      "case_name": "缓加速窗口",
+      "bus": "can0",
+      "target_label": "安全",
+      "intensity": 0.96,
+      "packet_scale": 1.02,
+      "jitter": 0.78
+    },
+    {
+      "window_id": "G1-W03",
+      "timestamp": "2026-03-23T09:10:00",
+      "case_name": "短时重放试探",
+      "bus": "can0",
+      "target_label": "重放",
+      "intensity": 0.92,
+      "packet_scale": 0.96,
+      "jitter": 0.8
+    },
+    {
+      "window_id": "G1-W04",
+      "timestamp": "2026-03-23T09:15:00",
+      "case_name": "匀速巡航",
+      "bus": "eth0",
+      "target_label": "安全",
+      "intensity": 0.9,
+      "packet_scale": 1.0,
+      "jitter": 0.72
+    },
+    {
+      "window_id": "G1-W05",
+      "timestamp": "2026-03-23T09:20:00",
+      "case_name": "身份伪装注入",
+      "bus": "eth0",
+      "target_label": "欺骗",
+      "intensity": 0.98,
+      "packet_scale": 1.01,
+      "jitter": 0.82
+    },
+    {
+      "window_id": "G1-W06",
+      "timestamp": "2026-03-23T09:25:00",
+      "case_name": "回归稳定",
+      "bus": "can0",
+      "target_label": "安全",
+      "intensity": 0.88,
+      "packet_scale": 0.97,
+      "jitter": 0.7
+    }
+  ]
+}

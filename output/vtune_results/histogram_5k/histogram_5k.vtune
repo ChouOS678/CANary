@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+ <rdmgr>
+  <timestamp type="u64_t">1781371759</timestamp>
+  <hostname>ChouGrok</hostname>
+  <os>windows</os>
+  <product>Intel® VTune™ Profiler 2026.2.0</product>
+  <buildNumber type="s32_t">632324</buildNumber>
+  <logicalCPUCount type="s32_t">16</logicalCPUCount>
+  <physicalCoreCount type="s32_t">12</physicalCoreCount>
+  <processorPackageCount type="s32_t">1</processorPackageCount>
+  <CPUFrequency type="s64_t">3187000000</CPUFrequency>
+  <CPUFamily type="s32_t">6</CPUFamily>
+  <CPUModel type="s32_t">186</CPUModel>
+  <CPUStepping type="s32_t">2</CPUStepping>
+  <CPUBrandName>13th Gen Intel(R) Core(TM) i5-13500H</CPUBrandName>
+  <isa>avx2</isa>
+  <collectionTimeBegin type="u64_t">1781371759</collectionTimeBegin>
+  <collectionTimeEnd type="u64_t">1781371764</collectionTimeEnd>
+  <variables>
+   <at>ue</at>
+  </variables>
+ </rdmgr>
+</root>
