@@ -332,7 +332,7 @@ with tab_train:
 
 # ======================== Tab 2: 性能对比 ========================
 with tab_perf:
-    st.subheader("⚡ 算法效能对比：传统 scikit-learn vs 直方图离散化")
+    st.subheader("⚡ 算法效能对比：传统 scikit-learn vs 直方图离散化 vs NLP 文本分类")
 
     # Run comparison button
     col_p1, col_p2 = st.columns([3, 1])
@@ -342,11 +342,14 @@ with tab_perf:
         )
 
     if perf_clicked:
-        with st.spinner("正在运行性能对比测试（可能需要几秒）..."):
+        with st.spinner("正在运行性能对比测试（含 NLP 文本分类训练，约 30~60 秒）..."):
             try:
+                import time as _perf_time
+                _t_start = _perf_time.perf_counter()
                 from perf_compare import PerfBenchmark, run_comparison
                 PERF_DIR.mkdir(parents=True, exist_ok=True)
                 results = run_comparison(group_config, PERF_DIR)
+                _elapsed = _perf_time.perf_counter() - _t_start
                 # Save comparison results
                 (PERF_DIR / "comparison_results.json").write_text(
                     json.dumps(
@@ -372,7 +375,7 @@ with tab_perf:
                     "n_estimators": group_config.get("rf_params", {}).get("n_estimators"),
                     "max_depth": group_config.get("rf_params", {}).get("max_depth"),
                 }
-                st.success("✅ 性能对比测试完成！")
+                st.success(f"✅ 性能对比测试完成！（耗时 {_elapsed:.1f} 秒）")
             except Exception as e:
                 st.error(f"❌ 性能对比失败: {e}")
                 logger.error(f"Perf comparison failed: {e}", exc_info=True)
@@ -462,6 +465,50 @@ with tab_perf:
                 st.metric("预测耗时 (scikit-learn)", f"{c.get('predict_time_sec', 0):.4f}s")
                 st.metric("预测耗时 (直方图)", f"{e.get('predict_time_sec', 0):.4f}s")
 
+            # ── 区域 A+：NLP-Transformer 模型（如果存在）──
+            nlp_data = comparison.get("nlp", {})
+            if nlp_data and nlp_data.get("accuracy"):
+                st.markdown("---")
+                st.markdown(
+                    "#### :memo: NLP 文本分类模型（CAN 消息序列 token 化）"
+                )
+                st.caption(
+                    "将 CAN 消息窗口视为领域文本：每条消息组合成 token，"
+                    "再用 TF-IDF + 经典线性分类器完成风险识别。"
+                )
+                nc1, nc2, nc3, nc4 = st.columns(4)
+                with nc1:
+                    st.metric(
+                        "NLP 准确率",
+                        f"{nlp_data['accuracy']:.4f}",
+                        delta=f"{nlp_data['accuracy'] - c.get('accuracy', 0):+.4f}"
+                        f" vs sklearn",
+                    )
+                with nc2:
+                    st.metric(
+                        "训练耗时",
+                        f"{nlp_data.get('train_time_sec', 0):.2f}s",
+                    )
+                with nc3:
+                    st.metric(
+                        "词表大小",
+                        f"{nlp_data.get('vocab_size', 0):,}",
+                    )
+                with nc4:
+                    nlp_cv = nlp_data.get("cv_mean_accuracy", 0)
+                    st.metric(
+                        "5-折 CV 准确率",
+                        f"{nlp_cv:.4f}"
+                        + (f" ± {nlp_data.get('cv_std_accuracy', 0):.4f}"
+                           if nlp_cv else ""),
+                    )
+                st.caption(
+                    f"模型: {nlp_data.get('model_name', 'logreg')} | "
+                    f"特征维度: {nlp_data.get('n_features', '?')} | "
+                    f"F1: {nlp_data.get('f1_macro', 0):.4f} | "
+                    f"GPU 预留: {'是' if nlp_data.get('gpu_available') else '否'}"
+                )
+
             # 当 scikit-learn 训练更快时，显示原因解释
             sk_train = c.get("train_time_sec", 0)
             hi_train = e.get("train_time_sec", 0)
@@ -483,9 +530,14 @@ with tab_perf:
                 ("perf_timing_compare.png", "训练 / 预测耗时"),
                 ("perf_cpu_compare.png", "CPU 利用率（更低 = 更高效）"),
                 ("perf_per_core_cpu.png", "逐核 CPU 热力图"),
-                ("perf_cache_hit_rate.png", "缓存命中率对比（Intel VTune PMC 实测，L1D/L3 命中率及 Miss 计数）"),
+                ("perf_cache_hit_rate.png", "缓存命中率对比"),
                 ("perf_radar_compare.png", "综合效能雷达"),
             ]
+            # NLP 对比图
+            if comparison.get("nlp"):
+                model_charts.insert(
+                    0, ("perf_nlp_compare.png", "NLP-Transformer vs 传统 ML 对比")
+                )
             for i in range(0, len(model_charts), 2):
                 cols = st.columns(2)
                 for j, (fname, title) in enumerate(model_charts[i:i+2]):

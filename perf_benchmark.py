@@ -45,8 +45,10 @@ NUM_FEATURES = len(FEATURES)  # 11
 # 算法标签
 LABEL_SKLEARN    = "传统 scikit-learn 算法"
 LABEL_HISTOGRAM  = "直方图离散化算法"
+LABEL_NLP        = "NLP-LogReg / LinearSVC"
 SHORT_SKLEARN    = "scikit-learn\n(float64)"
 SHORT_HISTOGRAM  = "直方图算法\n(uint8)"
+SHORT_NLP        = "NLP\n(text cls)"
 
 
 # ---------------------------------------------------------------------------
@@ -578,14 +580,43 @@ class PerfBenchmark:
             "",
             "【当前规模实测分析】",
             f"  样本量: {n_samples:,}，特征维度: {mem['n_features']}",
-            f"  训练耗时: scikit-learn {c['train_time_sec']:.4f}s"
-            f" vs 直方图 {e['train_time_sec']:.4f}s"
-            f"  ({'直方图快' if speedup_train >= 1 else 'scikit-learn快'}"
-            f" {max(speedup_train, 1/speedup_train):.2f}×)",
-            f"  预测耗时: scikit-learn {c['predict_time_sec']:.4f}s"
-            f" vs 直方图 {e['predict_time_sec']:.4f}s"
-            f"  ({'直方图快' if speedup_pred >= 1 else 'scikit-learn快'}"
-            f" {max(speedup_pred, 1/speedup_pred):.2f}×)",
+        ]
+
+        # ── NLP 模型结果（如果存在）──
+        nlp = results.get("nlp", {})
+        has_nlp = bool(nlp and nlp.get("accuracy"))
+        if has_nlp:
+            lines += [
+                f"  训练耗时: scikit-learn {c['train_time_sec']:.4f}s"
+                f" vs 直方图 {e['train_time_sec']:.4f}s"
+                f" vs NLP-Transformer {nlp['train_time_sec']:.4f}s",
+                f"  预测耗时: scikit-learn {c['predict_time_sec']:.4f}s"
+                f" vs 直方图 {e['predict_time_sec']:.4f}s"
+                f" vs NLP-Transformer {nlp.get('predict_time_sec', 0):.4f}s",
+                f"  scikit-learn 准确率: {c['accuracy']:.4f}",
+                f"  直方图算法准确率: {e['accuracy']:.4f}",
+                f"  NLP-Transformer 准确率: {nlp['accuracy']:.4f}",
+                f"  NLP 模型参数量: {nlp.get('n_params', 0):,}",
+            ]
+            nlp_cv = nlp.get("cv_mean_accuracy", 0)
+            if nlp_cv:
+                lines.append(
+                    f"  NLP-Transformer CV准确率: {nlp_cv:.4f}"
+                    f" ± {nlp.get('cv_std_accuracy', 0):.4f}"
+                )
+        else:
+            lines += [
+                f"  训练耗时: scikit-learn {c['train_time_sec']:.4f}s"
+                f" vs 直方图 {e['train_time_sec']:.4f}s"
+                f"  ({'直方图快' if speedup_train >= 1 else 'scikit-learn快'}"
+                f" {max(speedup_train, 1/speedup_train):.2f}×)",
+                f"  预测耗时: scikit-learn {c['predict_time_sec']:.4f}s"
+                f" vs 直方图 {e['predict_time_sec']:.4f}s"
+                f"  ({'直方图快' if speedup_pred >= 1 else 'scikit-learn快'}"
+                f" {max(speedup_pred, 1/speedup_pred):.2f}×)",
+            ]
+
+        lines += [
             f"  随机行访问: scikit-learn {bm.get('float64_access_ms', 0):.4f}ms"
             f" vs 直方图 {bm.get('uint8_access_ms', 0):.4f}ms"
             f"  (直方图快 {access_speedup:.2f}×)",
@@ -896,6 +927,33 @@ class PerfBenchmark:
                     ]
 
         lines.append("═" * 64)
+
+        # ── NLP 分析（如果存在）──
+        if has_nlp:
+            nlp_acc = nlp["accuracy"]
+            lines += [
+                "",
+                "【NLP-Transformer 分析】",
+                "",
+                f"  NLP-Transformer 将每条 CAN 消息（CAN ID + 数据载荷）视为 token，",
+                f"  整个消息序列作为「句子」，利用多头自注意力机制学习消息间依赖关系。",
+                "",
+                f"  与 scikit-learn ({c['accuracy']:.4f}) 和直方图 ({e['accuracy']:.4f}) 相比，",
+                f"  NLP-Transformer 准确率为 {nlp_acc:.4f}"
+                f"  ({'更优' if nlp_acc > max(c['accuracy'], e['accuracy']) else '接近' if abs(nlp_acc - max(c['accuracy'], e['accuracy'])) < 0.02 else '稍低'})。",
+                f"  模型参数量: {nlp.get('n_params', 0):,} 个。",
+                "",
+                "  优势:",
+                "  - 无需人工特征工程，直接从原始 CAN 消息学习表示",
+                "  - 自注意力机制天然适合捕捉序列中的长距离依赖",
+                "  - 可扩展到更大规模 CAN 数据和更多攻击类型",
+                "",
+                "  劣势:",
+                f"  - 训练耗时较长 ({nlp.get('train_time_sec', 0):.2f}s vs RF ~{c['train_time_sec']:.2f}s)",
+                "  - 需要 GPU 加速才能发挥最佳性能",
+                "  - 模型可解释性不如决策树特征重要性",
+            ]
+
         return "\n".join(lines)
 
     @staticmethod

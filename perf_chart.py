@@ -29,8 +29,10 @@ from perf_benchmark import (
     L1D_CACHE_SIZE,
     L2_CACHE_SIZE,
     LABEL_HISTOGRAM,
+    LABEL_NLP,
     LABEL_SKLEARN,
     SHORT_HISTOGRAM,
+    SHORT_NLP,
     SHORT_SKLEARN,
 )
 from utils import logger
@@ -59,8 +61,10 @@ def _setup_matplotlib() -> None:
 _COLORS = {
     "sklearn":          "#ff7b72",   # 红色系 — scikit-learn
     "histogram":        "#3fb950",   # 绿色系 — 直方图算法
+    "nlp":              "#58a6ff",   # 蓝色系 — NLP-Transformer
     "sklearn_light":    "#ffa198",
     "histogram_light":  "#56d364",
+    "nlp_light":        "#79c0ff",
     "neutral":          "#58a6ff",
 }
 
@@ -82,6 +86,10 @@ def render_comparison_charts(results: dict[str, Any], output_dir: Path) -> None:
     _chart_controlled_variable(results, output_dir)
     _chart_scale_analysis(results, output_dir)
     _chart_radar(results, output_dir)
+
+    # NLP 专属图表
+    if results.get("nlp"):
+        _chart_nlp_model_compare(results, output_dir)
 
     logger.info(f"[PerfCompare] 图表已保存到 {output_dir}")
 
@@ -571,5 +579,64 @@ def _chart_radar(results: dict[str, Any], output_dir: Path) -> None:
 
     fig.tight_layout()
     fig.savefig(output_dir / "perf_radar_compare.png",
+                dpi=180, bbox_inches="tight", facecolor=fig.get_facecolor())
+    plt.close(fig)
+
+
+# ── 图 8：NLP-Transformer 模型对比 ────────────────────────────
+def _chart_nlp_model_compare(results: dict[str, Any], output_dir: Path) -> None:
+    """三种算法准确率 + 训练耗时对比（含 NLP-Transformer）。"""
+    s = results["sklearn"]
+    h = results["histogram"]
+    nlp = results.get("nlp", {})
+    if not nlp:
+        return
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5))
+
+    # ── 左：准确率对比 ──
+    labels = ["scikit-learn\n(RF float64)", "直方图算法\n(RF uint8)",
+              "NLP-Transformer\n(CAN序列)"]
+    accs = [s["accuracy"], h["accuracy"], nlp["accuracy"]]
+    colors = [_COLORS["sklearn"], _COLORS["histogram"], _COLORS["nlp"]]
+    x = np.arange(len(labels))
+    bars = ax1.bar(x, accs, 0.5, color=colors, edgecolor="white", linewidth=0.6)
+    for bar, acc in zip(bars, accs):
+        ax1.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.005,
+                 f"{acc:.4f}", ha="center", va="bottom", fontsize=11,
+                 color="#e6edf3", fontweight="bold")
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(labels, fontsize=10)
+    ax1.set_ylabel("准确率", fontsize=11)
+    ax1.set_title("模型准确率对比", fontsize=13, fontweight="bold")
+    ax1.set_ylim(min(accs) * 0.85, max(accs) * 1.08)
+
+    # ── 右：训练耗时对比 ──
+    times = [s["train_time_sec"], h["train_time_sec"], nlp["train_time_sec"]]
+    bars_t = ax2.bar(x, times, 0.5, color=colors, edgecolor="white", linewidth=0.6)
+    for bar, t in zip(bars_t, times):
+        ax2.text(bar.get_x() + bar.get_width() / 2, bar.get_height() * 1.02,
+                 f"{t:.3f}s", ha="center", va="bottom", fontsize=10,
+                 color="#e6edf3")
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(labels, fontsize=10)
+    ax2.set_ylabel("训练耗时 (秒)", fontsize=11)
+    ax2.set_title("训练耗时对比", fontsize=13, fontweight="bold")
+
+    # NLP 标注
+    nlp_label = (
+        f"NLP 模型: {nlp.get('d_model', '?')}d, "
+        f"{nlp.get('nhead', '?')}head, "
+        f"{nlp.get('num_layers', '?')}层, "
+        f"{nlp.get('n_params', 0):,}参"
+    )
+    fig.suptitle(
+        f"传统机器学习 vs NLP-Transformer 对比\n"
+        f"{nlp_label} | 设备: {nlp.get('device', 'cpu')} | "
+        f"CV: {nlp.get('cv_mean_accuracy', 0):.4f}",
+        fontsize=12, fontweight="bold", y=1.04)
+
+    fig.tight_layout()
+    fig.savefig(output_dir / "perf_nlp_compare.png",
                 dpi=180, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)

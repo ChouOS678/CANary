@@ -62,104 +62,104 @@
     }
   },
   "hardware": {
-    "duration_sec": 1.6,
-    "samples": 4,
+    "duration_sec": 1.04,
+    "samples": 3,
     "cpu_total_pct": {
-      "avg": 38.4,
-      "peak": 56.0,
+      "avg": 47.1,
+      "peak": 75.5,
       "min": 0.0
     },
     "cpu_per_core_pct": [
       {
-        "avg": 15.4,
-        "peak": 25.7,
+        "avg": 57.8,
+        "peak": 94.1,
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 41.2,
+        "peak": 63.6,
         "min": 0.0
       },
       {
-        "avg": 16.3,
-        "peak": 26.3,
+        "avg": 60.7,
+        "peak": 94.1,
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 36.3,
+        "peak": 57.6,
         "min": 0.0
       },
       {
-        "avg": 14.7,
-        "peak": 20.5,
+        "avg": 53.9,
+        "peak": 82.4,
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 35.9,
+        "peak": 60.6,
         "min": 0.0
       },
       {
-        "avg": 0.7,
-        "peak": 2.9,
+        "avg": 47.1,
+        "peak": 72.7,
         "min": 0.0
       },
       {
-        "avg": 10.0,
-        "peak": 17.1,
+        "avg": 50.8,
+        "peak": 84.8,
         "min": 0.0
       },
       {
-        "avg": 69.4,
-        "peak": 100.0,
+        "avg": 41.8,
+        "peak": 69.7,
         "min": 0.0
       },
       {
-        "avg": 68.8,
-        "peak": 100.0,
+        "avg": 44.1,
+        "peak": 68.6,
         "min": 0.0
       },
       {
-        "avg": 67.3,
-        "peak": 100.0,
+        "avg": 49.8,
+        "peak": 84.8,
         "min": 0.0
       },
       {
-        "avg": 64.9,
-        "peak": 100.0,
+        "avg": 39.2,
+        "peak": 64.7,
         "min": 0.0
       },
       {
-        "avg": 70.8,
-        "peak": 100.0,
+        "avg": 48.0,
+        "peak": 72.7,
         "min": 0.0
       },
       {
-        "avg": 72.2,
-        "peak": 100.0,
+        "avg": 47.3,
+        "peak": 81.8,
         "min": 0.0
       },
       {
-        "avg": 70.8,
-        "peak": 100.0,
+        "avg": 51.1,
+        "peak": 84.8,
         "min": 0.0
       },
       {
-        "avg": 73.7,
-        "peak": 100.0,
+        "avg": 50.8,
+        "peak": 81.8,
         "min": 0.0
       }
     ],
     "mem_system_pct": {
-      "avg": 92.8,
-      "peak": 93.2,
-      "min": 92.4
+      "avg": 71.7,
+      "peak": 72.1,
+      "min": 71.2
     },
     "proc_memory_mb": {
-      "avg": 279.2,
-      "peak": 289.6,
-      "min": 250.6
+      "avg": 280.0,
+      "peak": 293.9,
+      "min": 253.8
     }
   }
 }

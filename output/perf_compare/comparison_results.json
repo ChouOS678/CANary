@@ -9,93 +9,93 @@
   "sklearn": {
     "label": "传统 scikit-learn 算法",
     "accuracy": 0.9674,
-    "train_time_sec": 14.3421,
-    "predict_time_sec": 0.1407,
-    "cpu_avg_pct": 34.6,
-    "cpu_peak_pct": 50.1,
+    "train_time_sec": 36.8343,
+    "predict_time_sec": 0.0621,
+    "cpu_avg_pct": 58.1,
+    "cpu_peak_pct": 88.7,
     "cpu_per_core": [
       {
-        "avg": 4.2,
-        "peak": 16.7,
+        "avg": 71.4,
+        "peak": 92.1,
         "min": 0.0
       },
       {
-        "avg": 24.0,
-        "peak": 34.9,
+        "avg": 67.1,
+        "peak": 87.9,
         "min": 0.0
       },
       {
-        "avg": 14.5,
-        "peak": 23.1,
+        "avg": 69.3,
+        "peak": 91.9,
         "min": 0.0
       },
       {
-        "avg": 1.5,
-        "peak": 6.1,
+        "avg": 67.7,
+        "peak": 87.9,
         "min": 0.0
       },
       {
-        "avg": 16.2,
-        "peak": 30.3,
+        "avg": 65.9,
+        "peak": 94.1,
         "min": 0.0
       },
       {
-        "avg": 0.8,
-        "peak": 3.0,
+        "avg": 67.5,
+        "peak": 94.1,
         "min": 0.0
       },
       {
-        "avg": 15.3,
-        "peak": 23.5,
+        "avg": 64.2,
+        "peak": 97.0,
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 63.6,
+        "peak": 100.0,
         "min": 0.0
       },
       {
-        "avg": 57.4,
-        "peak": 85.4,
-        "min": 0.0
-      },
-      {
-        "avg": 64.5,
-        "peak": 90.2,
-        "min": 0.0
-      },
-      {
-        "avg": 66.7,
-        "peak": 91.4,
-        "min": 0.0
-      },
-      {
-        "avg": 63.5,
-        "peak": 97.6,
-        "min": 0.0
-      },
-      {
-        "avg": 59.2,
-        "peak": 92.7,
-        "min": 0.0
-      },
-      {
-        "avg": 58.0,
-        "peak": 90.2,
-        "min": 0.0
-      },
-      {
-        "avg": 57.9,
+        "avg": 59.6,
         "peak": 91.2,
         "min": 0.0
       },
       {
+        "avg": 57.3,
+        "peak": 94.3,
+        "min": 0.0
+      },
+      {
+        "avg": 54.4,
+        "peak": 87.9,
+        "min": 0.0
+      },
+      {
         "avg": 51.7,
-        "peak": 82.4,
+        "peak": 91.2,
+        "min": 0.0
+      },
+      {
+        "avg": 53.7,
+        "peak": 93.9,
+        "min": 0.0
+      },
+      {
+        "avg": 49.0,
+        "peak": 90.9,
+        "min": 0.0
+      },
+      {
+        "avg": 38.1,
+        "peak": 84.8,
+        "min": 0.0
+      },
+      {
+        "avg": 30.2,
+        "peak": 70.6,
         "min": 0.0
       }
     ],
-    "memory_peak_mb": 289.5,
+    "memory_peak_mb": 1255.9,
     "data_size_kb": 4202.3,
     "cache": {
       "l1d_hit_rate": 0.9718,
@@ -120,94 +120,94 @@
   "histogram": {
     "label": "直方图离散化算法",
     "accuracy": 0.9676,
-    "train_time_sec": 5.2496,
-    "predict_time_sec": 0.0712,
-    "encode_time_sec": 0.1247,
-    "cpu_avg_pct": 28.7,
-    "cpu_peak_pct": 43.4,
+    "train_time_sec": 7.0799,
+    "predict_time_sec": 0.0531,
+    "encode_time_sec": 0.0853,
+    "cpu_avg_pct": 31.6,
+    "cpu_peak_pct": 47.6,
     "cpu_per_core": [
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 51.5,
+        "peak": 81.8,
         "min": 0.0
       },
       {
-        "avg": 17.3,
-        "peak": 27.8,
+        "avg": 45.9,
+        "peak": 80.0,
         "min": 0.0
       },
       {
-        "avg": 18.1,
-        "peak": 29.4,
+        "avg": 47.9,
+        "peak": 81.8,
         "min": 0.0
       },
       {
-        "avg": 1.0,
-        "peak": 3.1,
+        "avg": 44.5,
+        "peak": 66.7,
         "min": 0.0
       },
       {
-        "avg": 10.3,
-        "peak": 18.8,
+        "avg": 51.5,
+        "peak": 78.8,
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 47.5,
+        "peak": 72.7,
         "min": 0.0
       },
       {
-        "avg": 11.9,
-        "peak": 23.5,
+        "avg": 51.5,
+        "peak": 84.8,
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 47.5,
+        "peak": 72.7,
         "min": 0.0
       },
       {
-        "avg": 45.7,
+        "avg": 44.0,
         "peak": 71.4,
         "min": 0.0
       },
       {
-        "avg": 47.4,
-        "peak": 73.5,
+        "avg": 39.7,
+        "peak": 75.8,
         "min": 0.0
       },
       {
-        "avg": 50.7,
-        "peak": 77.1,
+        "avg": 25.6,
+        "peak": 56.2,
         "min": 0.0
       },
       {
-        "avg": 50.7,
-        "peak": 77.1,
+        "avg": 10.3,
+        "peak": 28.1,
         "min": 0.0
       },
       {
-        "avg": 55.5,
-        "peak": 85.3,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 47.6,
-        "peak": 78.1,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 52.6,
-        "peak": 84.4,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 44.4,
-        "peak": 72.7,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       }
     ],
-    "memory_peak_mb": 283.2,
+    "memory_peak_mb": 1254.7,
     "data_size_kb": 525.3,
     "cache": {
       "l1d_hit_rate": 0.9524,
@@ -233,52 +233,52 @@
     "by_scale": {
       "1000": {
         "float64": {
-          "ms": 0.0217,
+          "ms": 0.011,
           "kb": 85.9
         },
         "uint8": {
-          "ms": 0.0174,
+          "ms": 0.0104,
           "kb": 10.7
         },
-        "speedup": 1.25
+        "speedup": 1.06
       },
       "10000": {
         "float64": {
-          "ms": 0.0537,
+          "ms": 0.0229,
           "kb": 859.4
         },
         "uint8": {
-          "ms": 0.047,
+          "ms": 0.0149,
           "kb": 107.4
         },
-        "speedup": 1.14
+        "speedup": 1.53
       },
       "50000": {
         "float64": {
-          "ms": 0.0675,
+          "ms": 0.0301,
           "kb": 4296.9
         },
         "uint8": {
-          "ms": 0.0385,
+          "ms": 0.0286,
           "kb": 537.1
         },
-        "speedup": 1.75
+        "speedup": 1.05
       },
       "100000": {
         "float64": {
-          "ms": 0.044,
+          "ms": 0.0484,
           "kb": 8593.8
         },
         "uint8": {
-          "ms": 0.0313,
+          "ms": 0.1683,
           "kb": 1074.2
         },
-        "speedup": 1.4
+        "speedup": 0.29
       }
     },
-    "float64_access_ms": 0.0406,
-    "uint8_access_ms": 0.0411,
-    "speedup": 0.99,
+    "float64_access_ms": 0.0226,
+    "uint8_access_ms": 0.0154,
+    "speedup": 1.47,
     "n_samples": 48900,
     "n_features": 11,
     "iterations": 30
@@ -703,5 +703,40 @@
     "access_speed": "timeit 基准实测",
     "accuracy": "程序实测 (time.perf_counter)",
     "cache": "Intel VTune PMC 硬件实测"
+  },
+  "nlp": {
+    "accuracy": 0.16666666666666666,
+    "train_time_sec": 0.5078,
+    "predict_time_sec": 0.1394,
+    "cv_mean_accuracy": 0.16666666666666666,
+    "cv_std_accuracy": 0.0,
+    "vocab_size": 176440,
+    "seq_len": 30,
+    "model_name": "logreg",
+    "gpu_available": false,
+    "n_features": 176440,
+    "f1_macro": 0.047619047619047616,
+    "label": "NLP-LogReg / LinearSVC",
+    "predictions_preview": [
+      {
+        "predicted_label": "安全",
+        "predicted_label_idx": 0,
+        "confidence": 1.0,
+        "sequence_text": "ID30A_D8_PE7A4_T2 ID502_D8_PB76E_T2 ID105_D8_P24DF_T1 ID20B_D8_P1974_T1 ID101_D8_P1CE8_T0 ID301_D8_PE5AC_T1 ID507_D8_PB776_T2 ID10F_D8_P20EB_T1 ID20C_D8_P1A80_T2 ID408_D8_PD173_T4 ID10D_D8_P1FE6_T1 ID30F_D8_PE3B2_T2 ID502_D8_PAE80_T2 ID10B_D8_P29E5_T1 ID20A_D8_P2189_T2 ID751_D8_P0682_T9 ID104_D8_P24F0_T1 ID302_D8_PE6B5_T1 ID602_D8_P8158_T9 ID502_D8_PAF86_T2 ID10B_D8_P19EF_T1 ID204_D8_P248B_T1 ID10C_D8_P19F2_T1 ID30D_D8_PE7AE_T1 ID500_D8_PA582_T1 ID40F_D8_PD86D_T5 ID10E_D8_P10FA_T1 ID20A_D8_P2088_T1 ID10D_D8_P1CFF_T0 ID307_D8_PE7AC_T2"
+      },
+      {
+        "predicted_label": "安全",
+        "predicted_label_idx": 0,
+        "confidence": 1.0,
+        "sequence_text": "ID103_D8_P8682_T1 ID506_D8_P3931_T2 ID305_D8_PFFEE_T1 ID203_D8_P6197_T1 ID10C_D8_P7F76_T0 ID104_D8_P7B7E_T0 ID500_D8_P4439_T1 ID304_D8_PF5EF_T1 ID204_D8_P569E_T2 ID601_D8_PC6D3_T9 ID100_D8_P8485_T0 ID104_D8_P8085_T0 ID409_D8_P456C_T4 ID506_D8_P3F3C_T2 ID305_D8_PEBFB_T1 ID100_D8_P8A80_T1 ID203_D8_P53A7_T2 ID754_D8_PD3BF_T9 ID10E_D8_P8978_T1 ID503_D8_P3A42_T1 ID30B_D8_PF1FB_T1 ID105_D8_P8A83_T0 ID20A_D8_P4FA7_T1 ID101_D8_P8885_T1 ID504_D8_P2F3E_T1 ID306_D8_PE9F2_T1 ID106_D8_P898C_T1 ID206_D8_P54AB_T2 ID401_D8_P4763_T4 ID10B_D8_P8F93_T0"
+      },
+      {
+        "predicted_label": "安全",
+        "predicted_label_idx": 0,
+        "confidence": 1.0,
+        "sequence_text": "ID304_D8_PF6AF_T1 ID504_D8_P895B_T1 ID209_D8_P57A0_T2 ID102_D8_PABCD_T0 ID40F_D8_P1AB0_T4 ID107_D8_PB2C8_T0 ID30D_D8_PFDA5_T1 ID504_D8_P8D58_T1 ID20C_D8_P4B97_T1 ID102_D8_PBABE_T0 ID10C_D8_PC2B7_T0 ID302_D8_PFF9E_T1 ID500_D8_P8753_T2 ID201_D8_P529C_T2 ID10D_D8_PC1BC_T1 ID107_D8_PC3B9_T1 ID407_D8_P0EB0_T5 ID30C_D8_PFE9F_T2 ID20C_D8_P4AA7_T2 ID500_D8_P7D56_T2 ID109_D8_PBBB3_T0 ID101_D8_PB4A8_T1 ID601_D8_PD8EE_T9 ID30B_D8_PFE9D_T1 ID207_D8_P509F_T1 ID505_D8_P7461_T1 ID108_D8_PAC9D_T0 ID755_D8_P822F_T9 ID101_D8_PB0A1_T1 ID302_D8_PF59B_T1"
+      }
+    ],
+    "source": "GPU 预留 token 化 + CPU 文本分类"
   }
 }

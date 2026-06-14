@@ -23,6 +23,7 @@ _FONT_CANDIDATES = [
 ]
 
 _CHART_FILES = [
+    ("perf_nlp_compare.png", "NLP-Transformer vs 传统机器学习对比"),
     ("perf_timing_compare.png", "训练 / 预测耗时对比"),
     ("perf_cache_hit_rate.png", "缓存命中率对比 (Intel VTune PMC 实测)"),
     ("perf_cpu_compare.png", "CPU 利用率对比"),
@@ -233,6 +234,86 @@ def generate_pdf_report(
     pdf.kv_line("scikit-learn 准确率", f"{sk.get('accuracy', 0):.4f}")
     pdf.kv_line("直方图算法准确率", f"{hi.get('accuracy', 0):.4f}")
     pdf.ln(4)
+
+    # ── NLP-Transformer 分析（如果存在）──
+    nlp_data = results.get("nlp", {})
+    if nlp_data and nlp_data.get("accuracy"):
+        pdf.section_title("2.1 NLP-Transformer 模型分析")
+        pdf.set_font("zh", "", 9)
+        pdf.set_text_color(120, 120, 120)
+        pdf.multi_cell(
+            0, 5,
+            "NLP 方法将每条 CAN 消息（CAN ID + 数据载荷）视为 token，"
+            "整个消息序列作为「句子」，利用多头自注意力机制端到端学习攻击模式，"
+            "无需人工设计特征。"
+        )
+        pdf.ln(2)
+
+        pdf.kv_line(
+            "NLP-Transformer 准确率",
+            f"{nlp_data['accuracy']:.4f}", bold_val=True,
+        )
+        pdf.kv_line(
+            "训练耗时",
+            f"{nlp_data.get('train_time_sec', 0):.2f}s"
+        )
+        n_params = nlp_data.get("n_params", 0)
+        if n_params > 1_000_000:
+            params_str = f"{n_params / 1_000_000:.1f}M"
+        elif n_params > 1_000:
+            params_str = f"{n_params / 1_000:.1f}K"
+        else:
+            params_str = str(n_params)
+        pdf.kv_line("模型参数量", f"{n_params:,} ({params_str})")
+        pdf.kv_line(
+            "架构",
+            f"Transformer Encoder: d_model={nlp_data.get('d_model', '?')}, "
+            f"nhead={nlp_data.get('nhead', '?')}, "
+            f"layers={nlp_data.get('num_layers', '?')}"
+        )
+        pdf.kv_line("词汇表大小", f"{nlp_data.get('vocab_size', '?')}")
+        pdf.kv_line("序列长度", f"{nlp_data.get('seq_len', '?')} 条 CAN 消息")
+        pdf.kv_line("设备", f"{nlp_data.get('device', 'cpu')}")
+        nlp_cv = nlp_data.get("cv_mean_accuracy", 0)
+        if nlp_cv:
+            pdf.kv_line(
+                "5-折交叉验证",
+                f"{nlp_cv:.4f} ± {nlp_data.get('cv_std_accuracy', 0):.4f}",
+                bold_val=True,
+            )
+        pdf.ln(3)
+
+        # NLP 优势说明
+        pdf.set_font("zh", "B", 10)
+        pdf.set_text_color(30, 120, 60)
+        pdf.cell(0, 7, "NLP 方法的优势", ln=1)
+        pdf.set_font("zh", "", 10)
+        pdf.set_text_color(40, 40, 40)
+        pdf.multi_cell(
+            0, 5.5,
+            "1. 无需人工特征工程：Transformer 直接从原始 CAN 消息序列学习表示，"
+            "避免了传统方法中时间窗聚合、特征选择等手工步骤。\n"
+            "2. 序列建模能力：自注意力机制天然适合捕捉 CAN 消息间的长距离依赖关系，"
+            "可识别跨多个时间窗的复杂攻击模式。\n"
+            "3. 可扩展性：模型架构独立于 CAN 总线拓扑，可迁移到不同车型和总线配置。"
+        )
+        pdf.ln(3)
+
+        pdf.set_font("zh", "B", 10)
+        pdf.set_text_color(180, 60, 20)
+        pdf.cell(0, 7, "NLP 方法的局限", ln=1)
+        pdf.set_font("zh", "", 10)
+        pdf.set_text_color(40, 40, 40)
+        pdf.multi_cell(
+            0, 5.5,
+            "1. 训练开销较大：Transformer 参数量通常远大于 RandomForest，"
+            "需要更多训练时间和计算资源。\n"
+            "2. GPU 依赖：在 CPU 上训练 Transformer 速度较慢，"
+            "建议使用 CUDA 加速以获得最佳性能。\n"
+            "3. 可解释性不足：相比决策树的特征重要性排名，"
+            "Transformer 的注意力权重可解释性较弱。"
+        )
+        pdf.ln(4)
 
     # ── 内存与缓存 ──
     mem = results.get("memory_analysis", {})

@@ -1,8 +1,8 @@
 """算法效能对比 — 运行器与分析模块。
 
-串联两种算法的端到端对比流程：
+串联三种算法的端到端对比流程：
 1. 生成共享训练数据
-2. 分别运行 scikit-learn 和直方图算法
+2. 分别运行 scikit-learn、直方图算法 和 NLP 文本分类器
 3. 收集各维度效能指标
 4. 输出终端报告和图表
 """
@@ -17,6 +17,7 @@ from typing import Any
 from perf_benchmark import (
     FLOAT64_SIZE,
     LABEL_HISTOGRAM,
+    LABEL_NLP,
     LABEL_SKLEARN,
     NUM_FEATURES,
     UINT8_SIZE,
@@ -33,6 +34,14 @@ from model import (
     train_model,
 )
 from utils import logger
+
+# NLP 模块（可选，PyTorch 未安装时跳过）
+try:
+    from nlp_data import generate_can_sequences, prepare_nlp_dataset
+    from nlp_model import train_nlp_model, predict_nlp_sequences
+    NLP_AVAILABLE = True
+except ImportError:
+    NLP_AVAILABLE = False
 
 
 # ---------------------------------------------------------------------------
@@ -85,6 +94,61 @@ def run_comparison(
     t0 = time.perf_counter()
     predicted_histogram = predict_histogram_cases(model_histogram, input_cases)
     histogram_predict_time = time.perf_counter() - t0
+
+    # ── NLP-Transformer 算法 ────────────────────────────
+    nlp_results: dict[str, Any] | None = None
+    nlp_train_time = 0.0
+    nlp_predict_time = 0.0
+    if NLP_AVAILABLE:
+        logger.info("\n" + "─" * 50)
+        logger.info(f"【{LABEL_NLP}】CAN 消息序列 → 文本分类")
+        logger.info("─" * 50)
+        try:
+            # NLP 样本数上限：避免 Web 端长时间卡死
+            # NLP 仅用于概念对比演示，500/标签（共 3000 条）已足够
+            samples_per_label_nlp = min(
+                int(group_config.get("samples_per_label", 320)), 500
+            )
+            seq_len = min(64, max(16, samples_per_label_nlp * 6 // 100))
+            logger.info(f"[NLP] 生成 CAN 文本样本 (seq_len={seq_len}, "
+                       f"samples_per_label={samples_per_label_nlp})...")
+            # 临时缩小 samples_per_label 以加速 NLP 生成
+            nlp_config = dict(group_config)
+            nlp_config["samples_per_label"] = samples_per_label_nlp
+            nlp_sequences = generate_can_sequences(nlp_config, seq_len=seq_len)
+            nlp_dataset = prepare_nlp_dataset(nlp_sequences, seq_len=seq_len)
+            logger.info(f"[NLP] 生成 {nlp_dataset['n_samples']} 条文本样本")
+
+            t0 = time.perf_counter()
+            nlp_model, nlp_metrics = train_nlp_model(nlp_dataset, group_config)
+            nlp_train_time = time.perf_counter() - t0
+
+            t0 = time.perf_counter()
+            nlp_predictions = predict_nlp_sequences(nlp_model, nlp_dataset)
+            nlp_predict_time = time.perf_counter() - t0
+
+            nlp_results = {
+                "accuracy": nlp_metrics["accuracy"],
+                "train_time_sec": round(nlp_train_time, 4),
+                "predict_time_sec": round(nlp_predict_time, 4),
+                "cv_mean_accuracy": nlp_metrics.get("cv_mean_accuracy", 0),
+                "cv_std_accuracy": nlp_metrics.get("cv_std_accuracy", 0),
+                "vocab_size": nlp_metrics.get("vocab_size", 0),
+                "seq_len": nlp_metrics.get("seq_len", seq_len),
+                "model_name": nlp_metrics.get("model_name", "logreg"),
+                "gpu_available": nlp_metrics.get("gpu_available", False),
+                "n_features": nlp_metrics.get("n_features", 0),
+                "f1_macro": nlp_metrics.get("f1_macro", 0),
+                "label": LABEL_NLP,
+                "predictions_preview": nlp_predictions[:3],
+            }
+            logger.info(f"[NLP] 训练完成: Acc={nlp_metrics['accuracy']:.4f}, "
+                       f"Time={nlp_train_time:.2f}s")
+        except Exception as _nlp_err:
+            logger.warning(f"[NLP] 训练失败 (将继续使用 RF 对比): {_nlp_err}")
+            nlp_results = None
+    else:
+        logger.info("\n[NLP] 依赖不可用，跳过 NLP 文本分类对比")
 
     # ── 实测性能基准 ─────────────────────────────────────
     logger.info("\n[PerfBenchmark] 运行数据访问时间基准测试...")
@@ -144,6 +208,11 @@ def run_comparison(
         "source_labels": source_labels,
     }
 
+    # ── 附上 NLP 结果（如果存在）──
+    if nlp_results:
+        nlp_results["source"] = "GPU 预留 token 化 + CPU 文本分类"
+        results["nlp"] = nlp_results
+
     # ── 输出 ─────────────────────────────────────────────
     _print_comparison(results)
     render_comparison_charts(results, output_dir)
@@ -164,12 +233,18 @@ def _print_comparison(results: dict[str, Any]) -> None:
     mem = results["memory_analysis"]
 
     print("\n" + "█" * 64)
-    print(f"  算法效能对比报告：{LABEL_SKLEARN} vs {LABEL_HISTOGRAM}")
+    print(f"  算法效能对比报告：{LABEL_SKLEARN} vs {LABEL_HISTOGRAM}"
+          + (f" vs {LABEL_NLP}" if results.get("nlp") else ""))
     print("█" * 64)
+
+    nlp = results.get("nlp", {})
+    has_nlp = bool(nlp)
 
     print("\n── 模型准确率 ──")
     print(f"  {LABEL_SKLEARN}:    {s['accuracy']:.4f}")
     print(f"  {LABEL_HISTOGRAM}:  {h['accuracy']:.4f}")
+    if has_nlp:
+        print(f"  {LABEL_NLP}: {nlp['accuracy']:.4f}")
     print(f"  准确率差异:         {h['accuracy'] - s['accuracy']:+.4f}")
 
     print("\n── 训练耗时（含编码 + fit + predict，统一口径）──")
@@ -183,6 +258,15 @@ def _print_comparison(results: dict[str, Any]) -> None:
     print(f"  {LABEL_HISTOGRAM}:  {h['predict_time_sec']:.4f}s")
     speedup_pred = s["predict_time_sec"] / max(h["predict_time_sec"], 0.0001)
     print(f"  直方图加速比:       {speedup_pred:.2f}×")
+
+    if has_nlp:
+        print("\n── NLP 文本分类训练耗时 ──")
+        print(f"  {LABEL_NLP}: {nlp['train_time_sec']:.4f}s")
+        print(f"  词表大小:   {nlp.get('vocab_size', 0):,}")
+        print(f"  模型:       {nlp.get('model_name', 'logreg')}")
+        if nlp.get('cv_mean_accuracy'):
+            print(f"  5-折CV:     {nlp['cv_mean_accuracy']:.4f}"
+                  f" ± {nlp['cv_std_accuracy']:.4f}")
 
     print("\n── CPU 利用率（均值 / 峰值）──")
     print(f"  {LABEL_SKLEARN}:    {s['cpu_avg_pct']:.1f}% / {s['cpu_peak_pct']:.1f}%")
