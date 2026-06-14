@@ -19,6 +19,7 @@ import json
 import sys
 from pathlib import Path
 
+from config import validate_domain_config
 from data_generator import generate_dynamic_cases, generate_training_rows
 from model import (
     format_run_summary,
@@ -48,6 +49,9 @@ def save_training_csv(rows: list[dict[str, object]], path: Path) -> None:
 
 def run_standard_pipeline(group_config: dict, base_dir: Path) -> None:
     """标准模式：对照组 float64 列主序 RandomForest。"""
+    output_dir = base_dir / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     # Generate training data
     training_rows = generate_training_rows(group_config)
 
@@ -57,10 +61,6 @@ def run_standard_pipeline(group_config: dict, base_dir: Path) -> None:
     # Dynamic prediction: generate cases at runtime from blueprints
     input_cases = generate_dynamic_cases(group_config)
     predicted_rows = predict_cases(model, input_cases)
-
-    # Output
-    output_dir = base_dir / "output"
-    output_dir.mkdir(parents=True, exist_ok=True)
 
     summary = make_run_summary(
         group_config, training_rows, input_cases, predicted_rows, metrics
@@ -135,7 +135,6 @@ def main() -> None:
     """Run the full pipeline. Supports --compare flag for A/B testing."""
     base_dir = Path(__file__).resolve().parent
 
-    # 解析命令行参数
     compare_mode = "--compare" in sys.argv
 
     logger.info("Loading configuration...")
@@ -149,6 +148,14 @@ def main() -> None:
     except json.JSONDecodeError as e:
         logger.error(f"Invalid JSON in configuration: {e}")
         raise
+
+    domain_issues = validate_domain_config()
+    if domain_issues:
+        logger.error("Domain configuration validation failed:")
+        for issue in domain_issues:
+            logger.error("- %s", issue)
+        raise ValueError("Domain configuration is inconsistent; aborting run.")
+    logger.info("Domain configuration validation passed.")
 
     if compare_mode:
         run_compare_pipeline(group_config, base_dir)

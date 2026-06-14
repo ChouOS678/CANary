@@ -31,8 +31,14 @@ def matrix_from_rows(rows: list[dict[str, object]]) -> np.ndarray:
     n = len(rows)
     m = len(FEATURES)
     matrix = np.empty((n, m), dtype=np.float64)
+    missing: list[str] = []
     for col, feature in enumerate(FEATURES):
-        matrix[:, col] = [row[feature] for row in rows]
+        try:
+            matrix[:, col] = [row[feature] for row in rows]
+        except KeyError:
+            missing.append(feature)
+    if missing:
+        raise KeyError(f"Missing required feature columns: {missing}")
     return matrix
 
 
@@ -48,8 +54,9 @@ def compute_case_metrics(
     safe_probability: float,
 ) -> tuple[float, int, int, dict[str, int]]:
     """Compute risk metrics for a prediction case.
-    
-    FIXED: Removed duplicate abnormal_packets calculation.
+
+    The score is intentionally heuristic, so we keep the rule set explicit
+    and make packet accounting deterministic for both safe and attack cases.
     """
     feature_attack_score = float(
         np.clip(
@@ -79,19 +86,20 @@ def compute_case_metrics(
             )
         )
         abnormal_ratio = float(np.clip(0.02 + feature_attack_score * 0.11, 0.02, 0.12))
+        abnormal_packets = int(round(total_packets * abnormal_ratio))
         severity_split = {"low": 0, "medium": 0, "high": 0}
     else:
         risk_score = float(
             np.clip(confidence * 0.56 + feature_attack_score * 0.44, 0.18, 0.98)
         )
         abnormal_ratio = float(np.clip(0.14 + risk_score * 0.52, 0.16, 0.78))
+        abnormal_packets = int(round(total_packets * abnormal_ratio))
         if risk_score >= 0.8:
             weights = np.array([0.18, 0.33, 0.49])
         elif risk_score >= 0.58:
             weights = np.array([0.28, 0.44, 0.28])
         else:
             weights = np.array([0.48, 0.34, 0.18])
-        abnormal_packets = int(round(total_packets * abnormal_ratio))
         weighted = np.round(abnormal_packets * weights).astype(int)
         weighted[-1] = abnormal_packets - int(weighted[0]) - int(weighted[1])
         severity_split = {
@@ -100,8 +108,6 @@ def compute_case_metrics(
             "high": int(weighted[2]),
         }
 
-    # FIXED: Only calculate abnormal_packets once here (was duplicated before)
-    abnormal_packets = int(round(total_packets * abnormal_ratio))
     normal_packets = total_packets - abnormal_packets
     return risk_score, abnormal_packets, normal_packets, severity_split
 

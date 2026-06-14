@@ -9,14 +9,24 @@
   "sklearn": {
     "label": "传统 scikit-learn 算法",
     "accuracy": 0.9638,
-    "train_time_sec": 1.1789,
-    "predict_time_sec": 0.0711,
-    "cpu_avg_pct": 27.6,
-    "cpu_peak_pct": 46.1,
+    "train_time_sec": 1.122,
+    "predict_time_sec": 0.0733,
+    "cpu_avg_pct": 22.3,
+    "cpu_peak_pct": 44.6,
     "cpu_per_core": [
       {
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 5.7,
+        "peak": 11.4,
+        "min": 0.0
+      },
+      {
         "avg": 13.9,
-        "peak": 21.1,
+        "peak": 27.8,
         "min": 0.0
       },
       {
@@ -25,8 +35,8 @@
         "min": 0.0
       },
       {
-        "avg": 12.5,
-        "peak": 21.2,
+        "avg": 10.0,
+        "peak": 20.0,
         "min": 0.0
       },
       {
@@ -35,8 +45,8 @@
         "min": 0.0
       },
       {
-        "avg": 3.7,
-        "peak": 8.1,
+        "avg": 13.9,
+        "peak": 27.8,
         "min": 0.0
       },
       {
@@ -45,57 +55,47 @@
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 41.6,
+        "peak": 83.3,
         "min": 0.0
       },
       {
-        "avg": 15.3,
-        "peak": 24.2,
+        "avg": 42.9,
+        "peak": 85.7,
         "min": 0.0
       },
       {
-        "avg": 47.1,
-        "peak": 81.8,
+        "avg": 42.9,
+        "peak": 85.7,
         "min": 0.0
       },
       {
-        "avg": 46.0,
-        "peak": 81.2,
+        "avg": 45.9,
+        "peak": 91.7,
         "min": 0.0
       },
       {
-        "avg": 44.8,
-        "peak": 93.8,
+        "avg": 40.3,
+        "peak": 80.6,
         "min": 0.0
       },
       {
-        "avg": 34.8,
-        "peak": 71.9,
+        "avg": 38.9,
+        "peak": 77.8,
         "min": 0.0
       },
       {
-        "avg": 60.0,
-        "peak": 91.2,
+        "avg": 38.9,
+        "peak": 77.8,
         "min": 0.0
       },
       {
-        "avg": 52.9,
-        "peak": 93.9,
-        "min": 0.0
-      },
-      {
-        "avg": 57.6,
-        "peak": 97.0,
-        "min": 0.0
-      },
-      {
-        "avg": 61.0,
-        "peak": 93.9,
+        "avg": 35.7,
+        "peak": 71.4,
         "min": 0.0
       }
     ],
-    "memory_peak_mb": 316.9,
+    "memory_peak_mb": 266.1,
     "data_size_kb": 1727.3,
     "cache": {
       "l1d_hit_rate": 0.9718,
@@ -120,15 +120,25 @@
   "histogram": {
     "label": "直方图离散化算法",
     "accuracy": 0.964,
-    "train_time_sec": 0.9304,
-    "predict_time_sec": 0.0635,
-    "encode_time_sec": 0.0498,
-    "cpu_avg_pct": 18.2,
-    "cpu_peak_pct": 36.5,
+    "train_time_sec": 1.0184,
+    "predict_time_sec": 0.068,
+    "encode_time_sec": 0.0985,
+    "cpu_avg_pct": 14.9,
+    "cpu_peak_pct": 29.9,
     "cpu_per_core": [
       {
-        "avg": 11.8,
-        "peak": 23.5,
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 16.2,
+        "peak": 32.4,
+        "min": 0.0
+      },
+      {
+        "avg": 8.6,
+        "peak": 17.1,
         "min": 0.0
       },
       {
@@ -137,23 +147,8 @@
         "min": 0.0
       },
       {
-        "avg": 13.7,
-        "peak": 27.3,
-        "min": 0.0
-      },
-      {
-        "avg": 0.0,
-        "peak": 0.0,
-        "min": 0.0
-      },
-      {
-        "avg": 3.0,
-        "peak": 6.1,
-        "min": 0.0
-      },
-      {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 11.4,
+        "peak": 22.9,
         "min": 0.0
       },
       {
@@ -167,47 +162,52 @@
         "min": 0.0
       },
       {
-        "avg": 24.2,
-        "peak": 48.5,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 27.9,
-        "peak": 55.9,
+        "avg": 29.4,
+        "peak": 58.8,
         "min": 0.0
       },
       {
-        "avg": 8.8,
-        "peak": 17.6,
+        "avg": 40.5,
+        "peak": 81.1,
         "min": 0.0
       },
       {
-        "avg": 5.9,
-        "peak": 11.8,
+        "avg": 41.2,
+        "peak": 82.4,
         "min": 0.0
       },
       {
-        "avg": 37.9,
-        "peak": 75.8,
+        "avg": 34.3,
+        "peak": 68.6,
         "min": 0.0
       },
       {
-        "avg": 40.9,
-        "peak": 81.8,
+        "avg": 16.2,
+        "peak": 32.4,
         "min": 0.0
       },
       {
-        "avg": 35.3,
-        "peak": 70.6,
+        "avg": 5.7,
+        "peak": 11.4,
         "min": 0.0
       },
       {
-        "avg": 38.2,
-        "peak": 76.5,
+        "avg": 7.0,
+        "peak": 13.9,
+        "min": 0.0
+      },
+      {
+        "avg": 1.5,
+        "peak": 3.0,
         "min": 0.0
       }
     ],
-    "memory_peak_mb": 317.3,
+    "memory_peak_mb": 267.3,
     "data_size_kb": 215.9,
     "cache": {
       "l1d_hit_rate": 0.9524,
@@ -233,52 +233,52 @@
     "by_scale": {
       "1000": {
         "float64": {
-          "ms": 0.0298,
+          "ms": 0.0285,
           "kb": 85.9
         },
         "uint8": {
-          "ms": 0.0209,
+          "ms": 0.0208,
           "kb": 10.7
         },
-        "speedup": 1.42
+        "speedup": 1.37
       },
       "10000": {
         "float64": {
-          "ms": 0.037,
+          "ms": 0.0373,
           "kb": 859.4
         },
         "uint8": {
-          "ms": 0.0306,
+          "ms": 0.0339,
           "kb": 107.4
         },
-        "speedup": 1.21
+        "speedup": 1.1
       },
       "50000": {
         "float64": {
-          "ms": 0.0579,
+          "ms": 0.0487,
           "kb": 4296.9
         },
         "uint8": {
-          "ms": 0.0355,
+          "ms": 0.0493,
           "kb": 537.1
         },
-        "speedup": 1.63
+        "speedup": 0.99
       },
       "100000": {
         "float64": {
-          "ms": 0.0446,
+          "ms": 0.0452,
           "kb": 8593.8
         },
         "uint8": {
-          "ms": 0.0471,
+          "ms": 1.1282,
           "kb": 1074.2
         },
-        "speedup": 0.95
+        "speedup": 0.04
       }
     },
-    "float64_access_ms": 0.044,
-    "uint8_access_ms": 0.0325,
-    "speedup": 1.36,
+    "float64_access_ms": 0.041,
+    "uint8_access_ms": 0.054,
+    "speedup": 0.76,
     "n_samples": 20100,
     "n_features": 11,
     "iterations": 30
@@ -682,5 +682,26 @@
       "total_loads": 3621634216,
       "data_kb": 215.9
     }
+  },
+  "hardware_info": {
+    "l1d_cache_kb": 32,
+    "l2_cache_kb": 256,
+    "l3_cache_kb": 8192,
+    "cache_line_bytes": 64,
+    "cpu_model": "13th Gen Intel(R) Core(TM) i5-13500H",
+    "cpu_cores_physical": 12,
+    "cpu_cores_logical": 16,
+    "total_ram_gb": 15.7,
+    "python_version": "3.13.13",
+    "numpy_version": "2.4.3",
+    "sklearn_version": "1.7.2"
+  },
+  "source_labels": {
+    "timing": "程序实测 (time.perf_counter)",
+    "cpu": "psutil 系统监控实测",
+    "memory": "确定性计算",
+    "access_speed": "timeit 基准实测",
+    "accuracy": "程序实测 (time.perf_counter)",
+    "cache": "Intel VTune PMC 硬件实测"
   }
 }

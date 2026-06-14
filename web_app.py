@@ -83,6 +83,13 @@ def run_pipeline(
     progress_bar = st.progress(0, text="初始化...")
 
     try:
+        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+        st.session_state["_current_run_signature"] = {
+            "group_id": group_config.get("group_id"),
+            "samples_per_label": group_config.get("samples_per_label"),
+            "rf_params": dict(group_config.get("rf_params", {})),
+        }
+
         # Step 1: Check for cached model
         progress_bar.progress(10, text="检查缓存模型...")
         model = None
@@ -93,32 +100,32 @@ def run_pipeline(
 
         # Step 2: Generate training data if needed
         progress_bar.progress(25, text="生成训练数据...")
-        if model is None:
-            training_rows = generate_training_rows(group_config)
-            logs.append(f"✓ 生成 {len(training_rows)} 条训练样本")
+        training_rows = generate_training_rows(group_config)
+        logs.append(f"✓ 生成 {len(training_rows)} 条训练样本")
 
-            # Step 3: Train model
+        # Step 3: Train model if cache unavailable
+        if model is None:
             progress_bar.progress(50, text="训练模型...")
             model, metrics = train_model(training_rows, group_config)
             logs.append(f"✓ 模型训练完成，准确率: {metrics['accuracy']:.4f}")
 
             # Step 4: Save model
             progress_bar.progress(65, text="保存模型...")
-            OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
             save_model(model, MODEL_PATH)
             (OUTPUT_DIR / "model_metrics.json").write_text(
                 json.dumps(metrics, ensure_ascii=False, indent=2), encoding="utf-8"
             )
-            st.cache_resource.clear()  # Clear cache to reload
+            st.cache_resource.clear()
             logs.append("✓ 模型已保存")
         else:
-            training_rows = generate_training_rows(group_config)
             metrics = read_json(OUTPUT_DIR / "model_metrics.json") or {}
-            logs.append(f"\u2713 \u5df2\u52a0\u8f7d\u7f13\u5b58\u6a21\u578b\uff0c\u91cd\u65b0\u751f\u6210 {len(training_rows)} \u6761\u8bad\u7ec3\u6837\u672c\u7528\u4e8e\u7edf\u8ba1\u5c55\u793a")
+            logs.append("✓ 已复用缓存模型用于推理")
 
         # Step 5: Dynamic prediction
         progress_bar.progress(80, text="动态生成预测用例...")
         input_cases = generate_dynamic_cases(group_config)
+        if not input_cases:
+            raise ValueError("未生成任何预测用例，请检查 case_blueprints")
         predicted_rows = predict_cases(model, input_cases)
         logs.append(f"✓ 完成 {len(predicted_rows)} 条预测")
 
@@ -171,10 +178,10 @@ with st.sidebar:
             "树数量 (n_estimators)",
             50,
             300,
-            rf_params.get("n_estimators", 100),
+            int(rf_params.get("n_estimators", 100)),
         )
         max_depth = st.slider(
-            "最大深度 (max_depth)", 3, 15, rf_params.get("max_depth", 7)
+            "最大深度 (max_depth)", 3, 15, int(rf_params.get("max_depth", 7))
         )
 
         st.subheader("数据量参数")
@@ -359,13 +366,58 @@ with tab_perf:
             e = comparison.get("histogram", {})
             mem = comparison.get("memory_analysis", {})
             config = comparison.get("config", {})
+            hw_info = comparison.get("hardware_info", {})
+            src_labels = comparison.get("source_labels", {})
+
+            # ── 硬件配置环境说明 ──
+            if hw_info:
+                with st.expander("🖥️ 硬件配置环境", expanded=False):
+                    hc1, hc2, hc3 = st.columns(3)
+                    with hc1:
+                        st.caption("**CPU 信息**")
+                        cpu_model = hw_info.get("cpu_model", "Unknown")
+                        # 截断过长的 CPU 型号名
+                        if len(str(cpu_model)) > 40:
+                            cpu_model = str(cpu_model)[:37] + "..."
+                        st.metric("CPU 型号", cpu_model)
+                        st.metric("物理核心", hw_info.get("cpu_cores_physical", "N/A"))
+                        st.metric("逻辑核心", hw_info.get("cpu_cores_logical", "N/A"))
+                    with hc2:
+                        st.caption("**Cache 配置**")
+                        st.metric("L1D Cache", f"{hw_info.get('l1d_cache_kb', 0)} KB")
+                        st.metric("L2 Cache", f"{hw_info.get('l2_cache_kb', 0)} KB")
+                        st.metric("L3 Cache", f"{hw_info.get('l3_cache_kb', 0)} KB")
+                        st.metric("Cache Line", f"{hw_info.get('cache_line_bytes', 0)} B")
+                    with hc3:
+                        st.caption("**系统环境**")
+                        st.metric("总内存", f"{hw_info.get('total_ram_gb', 0):.1f} GB")
+                        st.metric("Python", hw_info.get("python_version", "N/A"))
+                        st.metric("NumPy", hw_info.get("numpy_version", "N/A"))
+                        st.metric("scikit-learn", hw_info.get("sklearn_version", "N/A"))
+
+            # ── 数据来源说明 ──
+            if src_labels:
+                with st.expander("📋 性能数据来源说明", expanded=False):
+                    src_items = [
+                        ("⏱️ 训练/预测耗时 & 准确率", src_labels.get("timing", "N/A")),
+                        ("📊 CPU 利用率", src_labels.get("cpu", "N/A")),
+                        ("💾 内存占用", src_labels.get("memory", "N/A")),
+                        ("🚀 数据访问速度", src_labels.get("access_speed", "N/A")),
+                        ("🧊 缓存命中率", src_labels.get("cache", "N/A")),
+                    ]
+                    for label, source in src_items:
+                        st.caption(f"{label}  →  **{source}**")
 
             # ── 区域 A：模型性能（随参数变化）──
             st.markdown("---")
             st.markdown(
                 "#### :dart: 模型性能指标（随树个数 / 深度等超参数变化）"
             )
-            st.caption("以下指标来自实际的 RandomForest 训练与预测，调整左侧参数后重新运行即可看到变化")
+            timing_src = src_labels.get("timing", "")
+            st.caption(
+                f"数据来源: **{timing_src}**  |  "
+                "以下指标来自实际的 RandomForest 训练与预测，调整左侧参数后重新运行即可看到变化"
+            )
             mc1, mc2, mc3 = st.columns(3)
             with mc1:
                 st.metric("scikit-learn 准确率", f"{c.get('accuracy', 0):.4f}")
@@ -418,10 +470,11 @@ with tab_perf:
             hi_cache = e.get("cache", {})
             if sk_cache and hi_cache:
                 has_vtune = sk_cache.get("measured", False)
+                cache_src = src_labels.get("cache", "")
                 src_label = ("Intel VTune PMC 硬件实测"
                              if has_vtune
                              else "理论模型 (min(C/D, 1))")
-                st.markdown(f"##### 🧊 缓存命中率（{src_label}）")
+                st.markdown(f"##### 🧊 缓存命中率（数据来源：{cache_src}）")
                 if has_vtune:
                     st.caption(
                         "数据来源: Intel VTune Profiler uarch-exploration 分析，"
@@ -489,7 +542,10 @@ with tab_perf:
             st.markdown(
                 "#### :computer: 数据层基准指标（仅取决于样本量，与模型参数无关）"
             )
+            mem_src = src_labels.get("memory", "")
+            acc_src = src_labels.get("access_speed", "")
             st.caption(
+                f"数据来源: 内存 → **{mem_src}** | 访问速度 → **{acc_src}**  "
                 "以下基准测试测量的是两种算法在**数据访问层面**的硬件性能差异"
                 "（随机行访问 `mat[random_indices]`，模拟决策树样本查找），"
                 "结果只由 `samples_per_label`（决定样本总量）决定，"

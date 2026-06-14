@@ -85,6 +85,131 @@ class PerfBenchmark:
     BENCH_ITERATIONS = 30
     BENCH_SCALES = [1_000, 10_000, 50_000, 100_000]
 
+    # ── 数据来源标签常量 ──
+    SOURCE_MEASURED    = "程序实测 (time.perf_counter)"
+    SOURCE_PSUTIL      = "psutil 系统监控实测"
+    SOURCE_TIMEIT      = "timeit 基准实测"
+    SOURCE_DETERM      = "确定性计算"
+    SOURCE_VTUNE       = "Intel VTune PMC 硬件实测"
+    SOURCE_THEORY      = "理论模型推算"
+
+    @staticmethod
+    def get_hardware_info() -> dict[str, Any]:
+        """收集当前运行环境的硬件配置信息。
+
+        优先使用 psutil + platform 实时采集，
+        失败时回退到默认常量值。
+
+        Returns:
+            dict with keys: cpu_model, cpu_cores_physical, cpu_cores_logical,
+            l1d_cache_kb, l2_cache_kb, l3_cache_kb, cache_line_bytes,
+            total_ram_gb, python_version, numpy_version, sklearn_version
+        """
+        import platform as _plat
+        import sys as _sys
+
+        info: dict[str, Any] = {
+            "l1d_cache_kb": L1D_CACHE_SIZE // 1024,
+            "l2_cache_kb": L2_CACHE_SIZE // 1024,
+            "l3_cache_kb": L3_CACHE_SIZE // 1024,
+            "cache_line_bytes": L1D_CACHE_LINE,
+        }
+
+        # ── CPU 型号 ──
+        cpu_model = "Unknown"
+        try:
+            import subprocess as _sp
+            import platform as _plat2
+            if _plat2.system() == "Windows":
+                # Windows: wmic 获取可读 CPU 名称
+                result = _sp.run(
+                    ["wmic", "cpu", "get", "name"],
+                    capture_output=True, text=True, timeout=5,
+                )
+                if result.returncode == 0:
+                    lines = [l.strip() for l in result.stdout.splitlines() if l.strip()]
+                    # 第一行是 "Name" 列头，第二行是实际值
+                    if len(lines) >= 2:
+                        cpu_model = lines[1]
+            elif _plat2.system() == "Linux":
+                # Linux: 读取 /proc/cpuinfo
+                try:
+                    with open("/proc/cpuinfo", "r") as _f:
+                        for line in _f:
+                            if line.startswith("model name"):
+                                cpu_model = line.split(":", 1)[1].strip()
+                                break
+                except OSError:
+                    pass
+            elif _plat2.system() == "Darwin":
+                # macOS: sysctl
+                result = _sp.run(
+                    ["sysctl", "-n", "machdep.cpu.brand_string"],
+                    capture_output=True, text=True, timeout=5,
+                )
+                if result.returncode == 0:
+                    cpu_model = result.stdout.strip()
+            if cpu_model == "Unknown":
+                cpu_model = _plat2.processor() or "Unknown"
+        except Exception:
+            try:
+                cpu_model = _plat.processor() or "Unknown"
+            except Exception:
+                cpu_model = "Unknown"
+        info["cpu_model"] = cpu_model
+
+        # ── CPU 核心数 ──
+        try:
+            import psutil as _psutil
+            info["cpu_cores_physical"] = _psutil.cpu_count(logical=False) or 0
+            info["cpu_cores_logical"] = _psutil.cpu_count(logical=True) or 0
+        except Exception:
+            info["cpu_cores_physical"] = 0
+            info["cpu_cores_logical"] = 0
+
+        # ── 总内存 ──
+        try:
+            import psutil as _psutil2
+            vm = _psutil2.virtual_memory()
+            info["total_ram_gb"] = round(vm.total / (1024 ** 3), 1)
+        except Exception:
+            info["total_ram_gb"] = 0.0
+
+        # ── 软件版本 ──
+        info["python_version"] = _sys.version.split()[0]
+        try:
+            info["numpy_version"] = np.__version__
+        except Exception:
+            info["numpy_version"] = "N/A"
+        try:
+            import sklearn
+            info["sklearn_version"] = sklearn.__version__
+        except Exception:
+            info["sklearn_version"] = "N/A"
+
+        return info
+
+    @staticmethod
+    def get_source_labels(cache_analysis: dict | None = None) -> dict[str, str]:
+        """根据实际数据来源返回各指标类别的来源标签。
+
+        Returns:
+            dict mapping metric category -> source description in Chinese
+        """
+        has_vtune = cache_analysis.get("has_vtune_data", False) if cache_analysis else False
+        labels = {
+            "timing":       PerfBenchmark.SOURCE_MEASURED,
+            "cpu":          PerfBenchmark.SOURCE_PSUTIL,
+            "memory":       PerfBenchmark.SOURCE_DETERM,
+            "access_speed": PerfBenchmark.SOURCE_TIMEIT,
+            "accuracy":     PerfBenchmark.SOURCE_MEASURED,
+        }
+        if has_vtune:
+            labels["cache"] = PerfBenchmark.SOURCE_VTUNE
+        else:
+            labels["cache"] = PerfBenchmark.SOURCE_THEORY
+        return labels
+
     @staticmethod
     def _random_access_bench(
         n_samples: int, n_features: int, n_lookups: int, iters: int
@@ -918,6 +1043,8 @@ def run_comparison(
     def _cpu_per_core(hw): return list(hw.get("cpu_per_core_pct", []))
 
     # ── 构建结果 ─────────────────────────────────────────
+    source_labels = PerfBenchmark.get_source_labels(cache)
+    hardware_info = PerfBenchmark.get_hardware_info()
     results: dict[str, Any] = {
         "config": {
             "n_samples": n_samples, "n_train": n_train, "n_test": n_test,
@@ -952,6 +1079,8 @@ def run_comparison(
         "memory_analysis": memory,
         "scale_analysis": scale,
         "cache_analysis": cache,
+        "hardware_info": hardware_info,
+        "source_labels": source_labels,
     }
 
     # ── 输出 ─────────────────────────────────────────────

@@ -139,16 +139,84 @@ def generate_pdf_report(
 
     # ── 基本信息 ──
     cfg = results.get("config", {})
+    hw_info = results.get("hardware_info", {})
+    src_labels = results.get("source_labels", {})
     pdf.section_title("1. 测试配置")
     pdf.kv_line("样本总量", f"{cfg.get('n_samples', 0):,}")
     pdf.kv_line("特征维度", str(cfg.get("n_features", 0)))
     pdf.kv_line("每标签样本数", f"{cfg.get('samples_per_label', 0):,}")
+    pdf.ln(2)
+
+    # ── 硬件环境 ──
+    if hw_info:
+        pdf.set_font("zh", "B", 11)
+        pdf.set_text_color(180, 60, 20)
+        pdf.cell(0, 8, "硬件配置环境", new_x="LMARGIN", new_y="NEXT")
+        pdf.set_font("zh", "", 10)
+        pdf.set_text_color(40, 40, 40)
+        cpu_model = str(hw_info.get("cpu_model", "Unknown"))
+        pdf.kv_line("CPU 型号", cpu_model)
+        pdf.kv_line("CPU 物理核心", str(hw_info.get("cpu_cores_physical", "N/A")))
+        pdf.kv_line("CPU 逻辑核心", str(hw_info.get("cpu_cores_logical", "N/A")))
+        pdf.kv_line("L1D Cache", f"{hw_info.get('l1d_cache_kb', 0)} KB (每核)")
+        pdf.kv_line("L2 Cache", f"{hw_info.get('l2_cache_kb', 0)} KB")
+        pdf.kv_line("L3 Cache", f"{hw_info.get('l3_cache_kb', 0)} KB (共享)")
+        pdf.kv_line("Cache Line", f"{hw_info.get('cache_line_bytes', 0)} B")
+        pdf.kv_line("系统总内存", f"{hw_info.get('total_ram_gb', 0):.1f} GB")
+        pdf.kv_line("Python 版本", str(hw_info.get("python_version", "N/A")))
+        pdf.kv_line("NumPy 版本", str(hw_info.get("numpy_version", "N/A")))
+        pdf.kv_line("scikit-learn 版本", str(hw_info.get("sklearn_version", "N/A")))
+        pdf.ln(4)
+
+    # ── 数据来源说明 ──
+    if src_labels:
+        pdf.set_font("zh", "B", 10)
+        pdf.set_text_color(180, 60, 20)
+        pdf.cell(0, 7, "数据来源说明", new_x="LMARGIN", new_y="NEXT")
+        pdf.set_font("zh", "", 10)
+        pdf.set_text_color(40, 40, 40)
+        src_map = [
+            ("训练/预测耗时 & 准确率", src_labels.get("timing", "N/A")),
+            ("CPU 利用率", src_labels.get("cpu", "N/A")),
+            ("内存占用", src_labels.get("memory", "N/A")),
+            ("数据访问速度", src_labels.get("access_speed", "N/A")),
+            ("缓存命中率", src_labels.get("cache", "N/A")),
+        ]
+        for label, source in src_map:
+            pdf.set_font("zh", "B", 10)
+            pdf.set_text_color(60, 60, 60)
+            pdf.cell(55, 7, label, new_x="END")
+            pdf.set_font("zh", "", 10)
+            pdf.set_text_color(80, 80, 80)
+            pdf.cell(0, 7, source, new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(2)
+
+    pdf.set_font("zh", "B", 10)
+    pdf.set_text_color(180, 60, 20)
+    pdf.cell(0, 7, "评测说明", new_x="LMARGIN", new_y="NEXT")
+    pdf.set_font("zh", "", 10)
+    pdf.set_text_color(40, 40, 40)
+    pdf.multi_cell(
+        0,
+        6,
+        "本报告中的性能指标主要来自程序实际运行后的统计结果，属于实测评测而非理论推导。"
+        "实验结论应理解为当前数据规模、硬件环境和实现方式下的相对表现，并非绝对普适结论。",
+    )
     pdf.ln(4)
 
     # ── 核心指标对比 ──
     sk = results.get("sklearn", {})
     hi = results.get("histogram", {})
+    timing_src = src_labels.get("timing", "") if src_labels else ""
+    cpu_src = src_labels.get("cpu", "") if src_labels else ""
+    mem_src = src_labels.get("memory", "") if src_labels else ""
     pdf.section_title("2. 核心性能指标")
+    if timing_src:
+        pdf.set_font("zh", "", 9)
+        pdf.set_text_color(120, 120, 120)
+        pdf.cell(0, 6, f"数据来源：{timing_src}（训练/预测耗时、准确率）, {cpu_src}（CPU利用率）",
+                 new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(2)
 
     pdf.kv_line("scikit-learn 训练耗时", f"{sk.get('train_time_sec', 0):.4f}s")
     pdf.kv_line("直方图算法训练耗时", f"{hi.get('train_time_sec', 0):.4f}s")
@@ -168,7 +236,14 @@ def generate_pdf_report(
 
     # ── 内存与缓存 ──
     mem = results.get("memory_analysis", {})
+    acc_src = src_labels.get("access_speed", "") if src_labels else ""
     pdf.section_title("3. 内存占用与缓存行为")
+    if mem_src or acc_src:
+        pdf.set_font("zh", "", 9)
+        pdf.set_text_color(120, 120, 120)
+        pdf.cell(0, 6, f"数据来源：{mem_src}（内存占用）, {acc_src}（数据访问速度）",
+                 new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(2)
     pdf.kv_line("float64 数据量", f"{mem.get('float64_total_kb', 0):.1f} KB")
     pdf.kv_line("uint8 数据量", f"{mem.get('uint8_total_kb', 0):.1f} KB")
     pdf.kv_line("内存缩减", f"{mem.get('memory_reduction_pct', 0):.1f}%", bold_val=True)
@@ -176,11 +251,13 @@ def generate_pdf_report(
     # VTune 缓存数据
     sk_cache = sk.get("cache", {})
     hi_cache = hi.get("cache", {})
+    cache_src = src_labels.get("cache", "") if src_labels else ""
     if sk_cache.get("measured"):
         pdf.ln(2)
         pdf.set_font("zh", "B", 11)
         pdf.set_text_color(180, 60, 20)
-        pdf.cell(0, 8, "Intel VTune PMC 硬件实测数据", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 8, f"Intel VTune PMC 硬件实测数据（数据来源：{cache_src}）",
+                 new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("zh", "", 10)
         pdf.set_text_color(40, 40, 40)
         pdf.kv_line("sklearn L1D 命中率", f"{sk_cache.get('l1d_hit_rate', 0)*100:.2f}%")
@@ -196,9 +273,9 @@ def generate_pdf_report(
                         f"sklearn 是直方图的 {sk_l3m/hi_l3m:.1f}x",
                         bold_val=True)
     elif sk_cache:
-        pdf.kv_line("sklearn L1D 命中率 (理论)",
+        pdf.kv_line(f"sklearn L1D 命中率（{cache_src}）",
                      f"{sk_cache.get('l1d_hit_rate', 0)*100:.2f}%")
-        pdf.kv_line("直方图 L1D 命中率 (理论)",
+        pdf.kv_line(f"直方图 L1D 命中率（{cache_src}）",
                      f"{hi_cache.get('l1d_hit_rate', 0)*100:.2f}%")
     pdf.ln(4)
 
@@ -212,6 +289,18 @@ def generate_pdf_report(
     # ── 分析结论 ──
     pdf.add_page()
     pdf.section_title("5. 详细分析结论")
+    pdf.set_font("zh", "B", 10)
+    pdf.set_text_color(180, 60, 20)
+    pdf.cell(0, 7, "结论边界说明", new_x="LMARGIN", new_y="NEXT")
+    pdf.set_font("zh", "", 10)
+    pdf.set_text_color(40, 40, 40)
+    pdf.multi_cell(
+        0,
+        6,
+        "以下结论基于当前实验条件下的实测数据，已结合控制变量分析对算法、数据类型和内存布局影响进行区分。"
+        "由于硬件平台、库版本、线程设置以及数据分布均会影响结果，因此结论应作为参考性的性能评估。",
+    )
+    pdf.ln(2)
 
     # 替换可能在字体中缺失的 Unicode 字符
     _BOX_MAP = str.maketrans({

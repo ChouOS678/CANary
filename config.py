@@ -192,3 +192,49 @@ DATA_PROFILE_DEFAULTS = {
     "drift_ratio": 0.1,
     "label_noise_ratio": 0.02,
 }
+
+
+def validate_domain_config() -> list[str]:
+    """Validate feature, label, and profile consistency.
+
+    Returns a list of human-readable issues. An empty list means the domain
+    configuration is self-consistent enough for training and reporting.
+    """
+    issues: list[str] = []
+
+    for feature in FEATURES:
+        if feature not in FEATURE_BOUNDS:
+            issues.append(f"Missing FEATURE_BOUNDS for feature: {feature}")
+        if feature not in FEATURES_CN:
+            issues.append(f"Missing FEATURES_CN mapping for feature: {feature}")
+
+    for label in LABELS:
+        if label not in CLASS_PROFILES:
+            issues.append(f"Missing CLASS_PROFILES entry for label: {label}")
+        if label not in FEATURE_ADJUSTMENTS:
+            issues.append(f"Missing FEATURE_ADJUSTMENTS entry for label: {label}")
+        if label not in CONFUSION_MAP:
+            issues.append(f"Missing CONFUSION_MAP entry for label: {label}")
+
+    for label, profile in CLASS_PROFILES.items():
+        missing_features = [feature for feature in FEATURES if feature not in profile]
+        if missing_features:
+            issues.append(
+                f"CLASS_PROFILES[{label!r}] missing features: {', '.join(missing_features)}"
+            )
+
+    for label, adjustments in FEATURE_ADJUSTMENTS.items():
+        unknown_features = [feature for feature in adjustments if feature not in FEATURES]
+        if unknown_features:
+            issues.append(
+                f"FEATURE_ADJUSTMENTS[{label!r}] references unknown features: {', '.join(unknown_features)}"
+            )
+
+    for label, neighbors in CONFUSION_MAP.items():
+        unknown_neighbors = [neighbor for neighbor in neighbors if neighbor not in LABELS]
+        if unknown_neighbors:
+            issues.append(
+                f"CONFUSION_MAP[{label!r}] references unknown labels: {', '.join(unknown_neighbors)}"
+            )
+
+    return issues
