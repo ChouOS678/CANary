@@ -10,7 +10,7 @@ import joblib
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
 
 from config import FEATURES, LABELS
 from data_generator import merged_data_profile
@@ -55,8 +55,48 @@ def compute_case_metrics(
 ) -> tuple[float, int, int, dict[str, int]]:
     """Compute risk metrics for a prediction case.
 
-    The score is intentionally heuristic, so we keep the rule set explicit
-    and make packet accounting deterministic for both safe and attack cases.
+    Theoretical Basis of Weight Coefficients
+    ----------------------------------------
+    The feature_attack_score is a linear combination of 5 groups of indicators,
+    each normalized to [0, 1].  The weights sum to 1.0 and reflect:
+
+    1. flow_kbps_mean (w=0.28) — 流量速率指标
+       DoS 攻击的首要特征是流量激增。除以 560 kbps（FEATURE_BOUNDS 上界）归一化。
+       权重最高，因为流量异常是 CAN 总线攻击最直接的物理层信号。
+
+    2. error_ratio (w=0.16) — 错误率指标
+       模糊攻击和 DoS 均会导致总线错误率上升。除以 0.35（上界）归一化。
+       权重适中，因为错误也可能来自正常的总线竞争。
+
+    3. burst_score (w=0.18) — 突发性指标
+       攻击报文通常以突发方式注入，与正常周期性 CAN 报文形成对比。
+       该指标直接参与 RandomForest 的 burst_score 特征。
+
+    4. inter_arrival_cv (w=0.14) — 时间间隔变异系数
+       攻击注入会破坏 CAN 报文的周期性规律，导致到达间隔变异增大。
+       权重较低，因为网络抖动也可能引起类似变化。
+
+    5. max(replay, fuzzy, spoof, uds) (w=0.24) — 主导攻击类型比率
+       四种攻击类型（重放/模糊/欺骗/UDS）共享此权重。使用 max() 而非 sum()
+       是因为在单一时间窗口内，通常只有一种攻击类型占主导（攻击不会同时发生），
+       取最大值可避免对多类型叠加场景的过度敏感。
+       DOMINANT_FEATURE 映射表定义了每种攻击类型对应的核心特征。
+
+    Risk Score Composition
+    ---------------------
+    - 预测为「安全」时: 1-safe_probability (0.32) + feature_attack_score (0.28)
+      此时模型置信度权重更高，因为"安全"判定更依赖模型判断。
+    - 预测为攻击时: confidence (0.56) + feature_attack_score (0.44)
+      攻击判定下，模型置信度贡献 56%，特征层信号贡献 44%。
+      两者权重比 ≈ 1.27:1，反映模型判断的主导性。
+
+    Severity Split (only for attack predictions)
+    --------------------------------------------
+    根据 risk_score 分三档，按高一中一低的比例分配异常包数：
+      - risk ≥ 0.8: 高:中:低 = 49:33:18（高风险场景下大部分包被标记为高危）
+      - risk ≥ 0.58: 高:中:低 = 28:44:28（中等风险，中等占比最高呈正态分布）
+      - risk < 0.58: 高:中:低 = 18:34:48（低风险，多数为低等级）
+    该分段策略参考了 NIST SP 800-61 的事件严重等级分级思想。
     """
     feature_attack_score = float(
         np.clip(
@@ -115,7 +155,22 @@ def compute_case_metrics(
 def train_model(
     training_rows: list[dict[str, object]], group_config: dict[str, object]
 ) -> tuple[RandomForestClassifier, dict[str, object]]:
-    """Train RandomForest model and return metrics."""
+    """Train RandomForest model and return metrics (with k-fold cross-validation).
+
+    Pipeline:
+    1. Hold-out split: 78% train, 22% test (stratified)
+    2. K-fold cross-validation (k=5) on the training set for robust evaluation
+    3. Train final model on full training set (for prediction use)
+    4. Evaluate final model on the held-out test set
+
+    Returns (model, metrics_dict) where metrics_dict includes:
+      - accuracy: hold-out test accuracy
+      - cv_mean_accuracy: mean accuracy across k folds
+      - cv_std_accuracy: standard deviation across k folds
+      - cv_fold_accuracies: per-fold accuracy list
+      - report: classification_report on test set
+      - hardware: HardwareMonitor summary
+    """
     x = matrix_from_rows(training_rows)
     y = labels_from_rows(training_rows, "label")
 
@@ -131,9 +186,30 @@ def train_model(
     n_jobs = rf_params.get("n_jobs", 1)
     if n_jobs == -1:
         n_jobs = os.cpu_count() or 1
-    logger.info(f"Training RandomForest model (n_jobs={n_jobs}, using {n_jobs} CPU cores)...")
 
-    # Start hardware monitoring
+    # ── K-Fold Cross-Validation ────────────────────────────────────
+    cv_folds = 5
+    cv = StratifiedKFold(n_splits=cv_folds, shuffle=True,
+                         random_state=int(group_config["training_seed"]))
+    cv_model = RandomForestClassifier(**rf_params)
+    logger.info(
+        f"Running {cv_folds}-fold cross-validation"
+        f" (n_jobs={n_jobs})..."
+    )
+    cv_scores = cross_val_score(
+        cv_model, x_train, y_train,
+        cv=cv, scoring="accuracy", n_jobs=n_jobs,
+    )
+    cv_mean = float(np.mean(cv_scores))
+    cv_std = float(np.std(cv_scores))
+    logger.info(
+        f"CV accuracy: {cv_mean:.4f} ± {cv_std:.4f}"
+        f" (folds: {[round(s, 4) for s in cv_scores]})"
+    )
+
+    # ── Final model training & hold-out evaluation ─────────────────
+    logger.info(f"Training final RandomForest model (n_jobs={n_jobs})...")
+
     monitor = HardwareMonitor(interval=0.5)
     monitor.start()
 
@@ -141,16 +217,19 @@ def train_model(
     model.fit(x_train, y_train)
     predictions = model.predict(x_test)
 
-    # Stop hardware monitoring
     hw_summary = monitor.stop()
 
     accuracy = float(accuracy_score(y_test, predictions))
     report = classification_report(y_test, predictions, digits=4, output_dict=True)
 
-    logger.info(f"Model accuracy: {accuracy:.4f}")
+    logger.info(f"Model accuracy (hold-out): {accuracy:.4f}")
 
     return model, {
         "accuracy": round(accuracy, 4),
+        "cv_mean_accuracy": round(cv_mean, 4),
+        "cv_std_accuracy": round(cv_std, 4),
+        "cv_folds": cv_folds,
+        "cv_fold_accuracies": [round(float(s), 4) for s in cv_scores],
         "report": report,
         "hardware": hw_summary,
     }
@@ -255,6 +334,10 @@ def make_run_summary(
         "expected_counts": to_counts(input_cases, "expected_label"),
         "predicted_counts": to_counts(predicted_rows, "predicted_label"),
         "accuracy": float(metrics["accuracy"]),
+        "cv_folds": metrics.get("cv_folds", 0),
+        "cv_mean_accuracy": metrics.get("cv_mean_accuracy", 0),
+        "cv_std_accuracy": metrics.get("cv_std_accuracy", 0),
+        "cv_fold_accuracies": metrics.get("cv_fold_accuracies", []),
         "confidence": {
             "min": round(min(confidences), 4),
             "mean": round(float(np.mean(confidences)), 4),
@@ -313,7 +396,8 @@ def format_run_summary(summary: dict[str, object]) -> str:
         *expected_lines,
         "预测标签分布：",
         *predicted_lines,
-        f"模型准确率：{summary['accuracy']:.4f}",
+        f"模型准确率 (hold-out)：{summary['accuracy']:.4f}",
+        f"交叉验证准确率 ({summary.get('cv_folds', 0)}-fold)：{summary.get('cv_mean_accuracy', 0):.4f} ± {summary.get('cv_std_accuracy', 0):.4f}",
         f"置信度区间：{summary['confidence']['min']:.4f} / {summary['confidence']['mean']:.4f} / {summary['confidence']['max']:.4f}",
         f"风险分数区间：{summary['risk_score']['min']:.4f} / {summary['risk_score']['mean']:.4f} / {summary['risk_score']['max']:.4f}",
         f"误判窗口数：{summary['misclassified_count']}",
