@@ -52,7 +52,7 @@ class _ReportPDF(FPDF):
     def header(self):
         self.set_font("zh", "B", 9)
         self.set_text_color(120, 120, 120)
-        self.cell(0, 8, "算法效能对比分析报告  |  CAN 总线异常检测系统", align="R")
+        self.cell(0, 8, "算法效能对比分析报告  |  CANary 金丝雀异常检测系统", align="R")
         self.ln(12)
         self.set_draw_color(200, 200, 200)
         self.line(10, self.get_y(), 200, self.get_y())

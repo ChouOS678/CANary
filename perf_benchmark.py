@@ -1,6 +1,6 @@
 """算法效能基准测试 — PerfBenchmark 类。
 
-以 CAN 总线异常检测场景为背景，提供两种 RandomForest 训练方案的
+以 CANary（CAN 总线异常检测）场景为背景，提供两种 RandomForest 训练方案的
 数据层效能基准测试：
 
 - 传统 scikit-learn 算法：直接使用 float64 原始特征值训练

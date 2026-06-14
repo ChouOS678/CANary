@@ -1,4 +1,4 @@
-"""Configuration constants for anomaly detection system."""
+"""CANary configuration constants for anomaly detection system."""
 
 FEATURES = [
     "flow_kbps_mean",

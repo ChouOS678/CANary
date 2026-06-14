@@ -163,8 +163,8 @@ def run_pipeline(
 
 # ========== Streamlit UI ==========
 
-st.set_page_config(page_title="异常检测系统", layout="wide", page_icon="🛡️")
-st.title("🛡️ CAN 总线异常检测可视化系统")
+st.set_page_config(page_title="CANary - 金丝雀", layout="wide", page_icon="🛡️")
+st.title("🛡️ CANary — 金丝雀异常检测可视化系统")
 
 # Sidebar for parameter controls (P2)
 with st.sidebar:

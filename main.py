@@ -1,4 +1,4 @@
-"""CAN 总线异常检测 - 命令行主入口。
+"""CANary — CAN 总线异常检测 - 命令行主入口。
 
 This module orchestrates the full pipeline:
 1. Load configuration

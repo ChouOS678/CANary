@@ -17,7 +17,7 @@ from typing import Optional
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
 
 from config import FEATURES, FEATURE_BOUNDS, LABELS
 from utils import HardwareMonitor, logger
@@ -220,7 +220,29 @@ def train_histogram_model(
     n_jobs = rf_params.get("n_jobs", 1)
     if n_jobs == -1:
         n_jobs = os.cpu_count() or 1
-    logger.info(f"[Histogram] Training RandomForest (n_jobs={n_jobs})...")
+
+    # ── K-Fold Cross-Validation ────────────────────────────────────
+    cv_folds = 5
+    cv = StratifiedKFold(n_splits=cv_folds, shuffle=True,
+                         random_state=int(group_config["training_seed"]))
+    cv_model = RandomForestClassifier(**rf_params)
+    logger.info(
+        f"[Histogram] Running {cv_folds}-fold cross-validation"
+        f" (n_jobs={n_jobs})..."
+    )
+    cv_scores = cross_val_score(
+        cv_model, x_train, y_train,
+        cv=cv, scoring="accuracy", n_jobs=n_jobs,
+    )
+    cv_mean = float(np.mean(cv_scores))
+    cv_std = float(np.std(cv_scores))
+    logger.info(
+        f"[Histogram] CV accuracy: {cv_mean:.4f} ± {cv_std:.4f}"
+        f" (folds: {[round(s, 4) for s in cv_scores]})"
+    )
+
+    # ── Final model training & hold-out evaluation ─────────────────
+    logger.info(f"[Histogram] Training final RandomForest (n_jobs={n_jobs})...")
 
     monitor = HardwareMonitor(interval=0.5)
     monitor.start()
@@ -240,6 +262,10 @@ def train_histogram_model(
 
     return model, {
         "accuracy": round(accuracy, 4),
+        "cv_mean_accuracy": round(cv_mean, 4),
+        "cv_std_accuracy": round(cv_std, 4),
+        "cv_folds": cv_folds,
+        "cv_fold_accuracies": [round(float(s), 4) for s in cv_scores],
         "report": report,
         "hardware": hw_summary,
         "encode_time_sec": round(encode_time, 4),
