@@ -536,15 +536,17 @@ class PerfBenchmark:
         """根据实测数据动态生成算法效能对比结论。"""
         c   = results["sklearn"]
         e   = results["histogram"]
-        bm  = results["benchmark"]
+        bm  = results.get("benchmark", {})
         mem = results["memory_analysis"]
         scale = results.get("scale_analysis", [])
         ca    = results.get("cache_analysis", {})
 
+        has_benchmark = bool(bm)  # main.py 旧版本可能不保存 benchmark
+
         n_samples = mem["n_samples"]
         speedup_train = c["train_time_sec"] / max(e["train_time_sec"], 0.0001)
         speedup_pred  = c["predict_time_sec"] / max(e["predict_time_sec"], 0.0001)
-        access_speedup = bm["speedup"]
+        access_speedup = bm.get("speedup", 0)
 
         # 当前数据量对应的缓存层级
         f64_kb = mem["float64_total_kb"]
@@ -584,8 +586,8 @@ class PerfBenchmark:
             f" vs 直方图 {e['predict_time_sec']:.4f}s"
             f"  ({'直方图快' if speedup_pred >= 1 else 'scikit-learn快'}"
             f" {max(speedup_pred, 1/speedup_pred):.2f}×)",
-            f"  随机行访问: scikit-learn {bm['float64_access_ms']:.4f}ms"
-            f" vs 直方图 {bm['uint8_access_ms']:.4f}ms"
+            f"  随机行访问: scikit-learn {bm.get('float64_access_ms', 0):.4f}ms"
+            f" vs 直方图 {bm.get('uint8_access_ms', 0):.4f}ms"
             f"  (直方图快 {access_speedup:.2f}×)",
             f"  数据集内存: scikit-learn {f64_kb}KB ({f64_level})"
             f" vs 直方图 {u8_kb}KB ({u8_level})"

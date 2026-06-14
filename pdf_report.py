@@ -45,8 +45,8 @@ class _ReportPDF(FPDF):
         super().__init__()
         self._font_path = font_path
         # 注册中文字体
-        self.add_font("zh", "", font_path, uni=True)
-        self.add_font("zh", "B", font_path, uni=True)
+        self.add_font("zh", "", font_path)
+        self.add_font("zh", "B", font_path)
         self.set_auto_page_break(auto=True, margin=20)
 
     def header(self):
@@ -68,7 +68,7 @@ class _ReportPDF(FPDF):
     def section_title(self, title: str):
         self.set_font("zh", "B", 14)
         self.set_text_color(30, 60, 120)
-        self.cell(0, 10, title, new_x="LMARGIN", new_y="NEXT")
+        self.cell(0, 10, title, ln=1)
         self.set_draw_color(30, 60, 120)
         self.line(10, self.get_y(), 80, self.get_y())
         self.ln(4)
@@ -82,11 +82,11 @@ class _ReportPDF(FPDF):
     def kv_line(self, key: str, value: str, bold_val: bool = False):
         self.set_font("zh", "B", 10)
         self.set_text_color(60, 60, 60)
-        self.cell(70, 7, key, new_x="END")
+        self.cell(70, 7, key, ln=0)
         style = "B" if bold_val else ""
         self.set_font("zh", style, 10)
         self.set_text_color(30, 30, 30)
-        self.cell(0, 7, value, new_x="LMARGIN", new_y="NEXT")
+        self.cell(0, 7, value, ln=1)
 
     def insert_chart(self, img_path: str | Path, caption: str):
         p = Path(img_path)
@@ -99,7 +99,7 @@ class _ReportPDF(FPDF):
         self.ln(2)
         self.set_font("zh", "", 9)
         self.set_text_color(100, 100, 100)
-        self.cell(0, 6, f"图: {caption}", align="C", new_x="LMARGIN", new_y="NEXT")
+        self.cell(0, 6, f"图: {caption}", align="C", ln=1)
         self.ln(4)
 
 
@@ -130,11 +130,11 @@ def generate_pdf_report(
     # ── 封面标题 ──
     pdf.set_font("zh", "B", 22)
     pdf.set_text_color(20, 40, 80)
-    pdf.cell(0, 15, "算法效能对比分析报告", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(0, 15, "算法效能对比分析报告", align="C", ln=1)
     pdf.set_font("zh", "", 12)
     pdf.set_text_color(100, 100, 100)
     pdf.cell(0, 10, "传统 scikit-learn (float64) vs 直方图离散化 (uint8)", align="C",
-             new_x="LMARGIN", new_y="NEXT")
+             ln=1)
     pdf.ln(6)
 
     # ── 基本信息 ──
@@ -151,7 +151,7 @@ def generate_pdf_report(
     if hw_info:
         pdf.set_font("zh", "B", 11)
         pdf.set_text_color(180, 60, 20)
-        pdf.cell(0, 8, "硬件配置环境", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 8, "硬件配置环境", ln=1)
         pdf.set_font("zh", "", 10)
         pdf.set_text_color(40, 40, 40)
         cpu_model = str(hw_info.get("cpu_model", "Unknown"))
@@ -172,7 +172,7 @@ def generate_pdf_report(
     if src_labels:
         pdf.set_font("zh", "B", 10)
         pdf.set_text_color(180, 60, 20)
-        pdf.cell(0, 7, "数据来源说明", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 7, "数据来源说明", ln=1)
         pdf.set_font("zh", "", 10)
         pdf.set_text_color(40, 40, 40)
         src_map = [
@@ -185,15 +185,15 @@ def generate_pdf_report(
         for label, source in src_map:
             pdf.set_font("zh", "B", 10)
             pdf.set_text_color(60, 60, 60)
-            pdf.cell(55, 7, label, new_x="END")
+            pdf.cell(55, 7, label, ln=0)
             pdf.set_font("zh", "", 10)
             pdf.set_text_color(80, 80, 80)
-            pdf.cell(0, 7, source, new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 7, source, ln=1)
         pdf.ln(2)
 
     pdf.set_font("zh", "B", 10)
     pdf.set_text_color(180, 60, 20)
-    pdf.cell(0, 7, "评测说明", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(0, 7, "评测说明", ln=1)
     pdf.set_font("zh", "", 10)
     pdf.set_text_color(40, 40, 40)
     pdf.multi_cell(
@@ -215,7 +215,7 @@ def generate_pdf_report(
         pdf.set_font("zh", "", 9)
         pdf.set_text_color(120, 120, 120)
         pdf.cell(0, 6, f"数据来源：{timing_src}（训练/预测耗时、准确率）, {cpu_src}（CPU利用率）",
-                 new_x="LMARGIN", new_y="NEXT")
+                 ln=1)
         pdf.ln(2)
 
     pdf.kv_line("scikit-learn 训练耗时", f"{sk.get('train_time_sec', 0):.4f}s")
@@ -242,7 +242,7 @@ def generate_pdf_report(
         pdf.set_font("zh", "", 9)
         pdf.set_text_color(120, 120, 120)
         pdf.cell(0, 6, f"数据来源：{mem_src}（内存占用）, {acc_src}（数据访问速度）",
-                 new_x="LMARGIN", new_y="NEXT")
+                 ln=1)
         pdf.ln(2)
     pdf.kv_line("float64 数据量", f"{mem.get('float64_total_kb', 0):.1f} KB")
     pdf.kv_line("uint8 数据量", f"{mem.get('uint8_total_kb', 0):.1f} KB")
@@ -257,7 +257,7 @@ def generate_pdf_report(
         pdf.set_font("zh", "B", 11)
         pdf.set_text_color(180, 60, 20)
         pdf.cell(0, 8, f"Intel VTune PMC 硬件实测数据（数据来源：{cache_src}）",
-                 new_x="LMARGIN", new_y="NEXT")
+                 ln=1)
         pdf.set_font("zh", "", 10)
         pdf.set_text_color(40, 40, 40)
         pdf.kv_line("sklearn L1D 命中率", f"{sk_cache.get('l1d_hit_rate', 0)*100:.2f}%")
@@ -291,7 +291,7 @@ def generate_pdf_report(
     pdf.section_title("5. 详细分析结论")
     pdf.set_font("zh", "B", 10)
     pdf.set_text_color(180, 60, 20)
-    pdf.cell(0, 7, "结论边界说明", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(0, 7, "结论边界说明", ln=1)
     pdf.set_font("zh", "", 10)
     pdf.set_text_color(40, 40, 40)
     pdf.multi_cell(
@@ -323,7 +323,7 @@ def generate_pdf_report(
                 pdf.set_font("zh", "B", 11)
                 pdf.set_text_color(30, 60, 120)
                 pdf.set_x(pdf.l_margin)
-                pdf.cell(0, 8, stripped, new_x="LMARGIN", new_y="NEXT")
+                pdf.cell(0, 8, stripped, ln=1)
                 pdf.set_font("zh", "", 10)
                 pdf.set_text_color(40, 40, 40)
                 continue
@@ -337,4 +337,7 @@ def generate_pdf_report(
             pdf.multi_cell(0, 5.5, stripped[:80])
 
     # ── 输出 ──
-    return bytes(pdf.output())
+    raw = pdf.output()
+    if isinstance(raw, (bytes, bytearray)):
+        return bytes(raw)
+    return raw.encode("latin-1")

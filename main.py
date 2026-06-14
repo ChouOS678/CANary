@@ -103,13 +103,13 @@ def run_compare_pipeline(group_config: dict, base_dir: Path) -> None:
     output_dir = base_dir / "output" / "perf_compare"
     results = run_comparison(group_config, output_dir)
 
-    # 保存对比结果 JSON（排除 benchmark 原始数据，减少文件体积）
+    # 保存对比结果 JSON
     (output_dir / "comparison_results.json").write_text(
         json.dumps(
             {
                 k: v
                 for k, v in results.items()
-                if k not in ("benchmark", "controlled_variables")
+                if k != "controlled_variables"
             },
             ensure_ascii=False,
             indent=2,

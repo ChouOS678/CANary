@@ -1,27 +1,37 @@
 {
   "config": {
-    "n_samples": 20100,
-    "n_train": 15678,
-    "n_test": 4422,
+    "n_samples": 48900,
+    "n_train": 38142,
+    "n_test": 10758,
     "n_features": 11,
-    "samples_per_label": 3350
+    "samples_per_label": 8150
   },
   "sklearn": {
     "label": "传统 scikit-learn 算法",
-    "accuracy": 0.9638,
-    "train_time_sec": 13.008,
-    "predict_time_sec": 0.0667,
-    "cpu_avg_pct": 32.0,
-    "cpu_peak_pct": 49.7,
+    "accuracy": 0.9674,
+    "train_time_sec": 14.3421,
+    "predict_time_sec": 0.1407,
+    "cpu_avg_pct": 34.6,
+    "cpu_peak_pct": 50.1,
     "cpu_per_core": [
       {
-        "avg": 20.3,
-        "peak": 34.3,
+        "avg": 4.2,
+        "peak": 16.7,
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 24.0,
+        "peak": 34.9,
+        "min": 0.0
+      },
+      {
+        "avg": 14.5,
+        "peak": 23.1,
+        "min": 0.0
+      },
+      {
+        "avg": 1.5,
+        "peak": 6.1,
         "min": 0.0
       },
       {
@@ -30,18 +40,13 @@
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 0.8,
+        "peak": 3.0,
         "min": 0.0
       },
       {
-        "avg": 9.1,
-        "peak": 15.2,
-        "min": 0.0
-      },
-      {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 15.3,
+        "peak": 23.5,
         "min": 0.0
       },
       {
@@ -50,53 +55,48 @@
         "min": 0.0
       },
       {
-        "avg": 11.7,
-        "peak": 20.0,
+        "avg": 57.4,
+        "peak": 85.4,
         "min": 0.0
       },
       {
-        "avg": 55.6,
-        "peak": 90.9,
+        "avg": 64.5,
+        "peak": 90.2,
         "min": 0.0
       },
       {
-        "avg": 53.4,
-        "peak": 90.9,
+        "avg": 66.7,
+        "peak": 91.4,
         "min": 0.0
       },
       {
-        "avg": 53.3,
-        "peak": 84.8,
+        "avg": 63.5,
+        "peak": 97.6,
         "min": 0.0
       },
       {
-        "avg": 48.2,
-        "peak": 81.8,
+        "avg": 59.2,
+        "peak": 92.7,
         "min": 0.0
       },
       {
-        "avg": 58.6,
-        "peak": 90.9,
+        "avg": 58.0,
+        "peak": 90.2,
         "min": 0.0
       },
       {
-        "avg": 58.7,
-        "peak": 88.2,
+        "avg": 57.9,
+        "peak": 91.2,
         "min": 0.0
       },
       {
-        "avg": 58.7,
-        "peak": 88.2,
-        "min": 0.0
-      },
-      {
-        "avg": 61.6,
-        "peak": 93.9,
+        "avg": 51.7,
+        "peak": 82.4,
         "min": 0.0
       }
     ],
-    "memory_peak_mb": 316.6,
-    "data_size_kb": 1727.3,
+    "memory_peak_mb": 289.5,
+    "data_size_kb": 4202.3,
     "cache": {
       "l1d_hit_rate": 0.9718,
       "l2_hit_rate": 0.7778,
@@ -107,28 +107,48 @@
       "l3_only_pct": 0.2,
       "mem_pct": 0.4,
       "measured": true,
-      "l1_hit_count": 6964670893,
-      "l1_miss_count": 119395790,
-      "l2_hit_count": 92863392,
-      "l2_miss_count": 26532398,
-      "l3_hit_count": 9951589,
-      "l3_miss_count": 16580808,
-      "total_loads": 7166984986,
-      "data_kb": 1727.3
+      "l1_hit_count": 16943900831,
+      "l1_miss_count": 290470356,
+      "l2_hit_count": 225921388,
+      "l2_miss_count": 64548968,
+      "l3_hit_count": 24210583,
+      "l3_miss_count": 40338385,
+      "total_loads": 17436097806,
+      "data_kb": 4202.3
     }
   },
   "histogram": {
     "label": "直方图离散化算法",
-    "accuracy": 0.964,
-    "train_time_sec": 6.2651,
-    "predict_time_sec": 0.0706,
-    "encode_time_sec": 0.0523,
-    "cpu_avg_pct": 21.6,
-    "cpu_peak_pct": 43.1,
+    "accuracy": 0.9676,
+    "train_time_sec": 5.2496,
+    "predict_time_sec": 0.0712,
+    "encode_time_sec": 0.1247,
+    "cpu_avg_pct": 28.7,
+    "cpu_peak_pct": 43.4,
     "cpu_per_core": [
       {
-        "avg": 15.7,
-        "peak": 31.4,
+        "avg": 0.0,
+        "peak": 0.0,
+        "min": 0.0
+      },
+      {
+        "avg": 17.3,
+        "peak": 27.8,
+        "min": 0.0
+      },
+      {
+        "avg": 18.1,
+        "peak": 29.4,
+        "min": 0.0
+      },
+      {
+        "avg": 1.0,
+        "peak": 3.1,
+        "min": 0.0
+      },
+      {
+        "avg": 10.3,
+        "peak": 18.8,
         "min": 0.0
       },
       {
@@ -137,8 +157,8 @@
         "min": 0.0
       },
       {
-        "avg": 17.6,
-        "peak": 35.3,
+        "avg": 11.9,
+        "peak": 23.5,
         "min": 0.0
       },
       {
@@ -147,68 +167,48 @@
         "min": 0.0
       },
       {
-        "avg": 10.9,
-        "peak": 21.9,
+        "avg": 45.7,
+        "peak": 71.4,
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 47.4,
+        "peak": 73.5,
         "min": 0.0
       },
       {
-        "avg": 7.6,
-        "peak": 15.2,
+        "avg": 50.7,
+        "peak": 77.1,
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 50.7,
+        "peak": 77.1,
         "min": 0.0
       },
       {
-        "avg": 39.5,
-        "peak": 78.9,
+        "avg": 55.5,
+        "peak": 85.3,
         "min": 0.0
       },
       {
-        "avg": 36.4,
+        "avg": 47.6,
+        "peak": 78.1,
+        "min": 0.0
+      },
+      {
+        "avg": 52.6,
+        "peak": 84.4,
+        "min": 0.0
+      },
+      {
+        "avg": 44.4,
         "peak": 72.7,
-        "min": 0.0
-      },
-      {
-        "avg": 34.9,
-        "peak": 69.7,
-        "min": 0.0
-      },
-      {
-        "avg": 39.4,
-        "peak": 78.8,
-        "min": 0.0
-      },
-      {
-        "avg": 34.9,
-        "peak": 69.7,
-        "min": 0.0
-      },
-      {
-        "avg": 35.3,
-        "peak": 70.6,
-        "min": 0.0
-      },
-      {
-        "avg": 34.9,
-        "peak": 69.7,
-        "min": 0.0
-      },
-      {
-        "avg": 25.8,
-        "peak": 51.5,
         "min": 0.0
       }
     ],
-    "memory_peak_mb": 312.0,
-    "data_size_kb": 215.9,
+    "memory_peak_mb": 283.2,
+    "data_size_kb": 525.3,
     "cache": {
       "l1d_hit_rate": 0.9524,
       "l2_hit_rate": 0.8235,
@@ -219,78 +219,78 @@
       "l3_only_pct": 0.6,
       "mem_pct": 0.3,
       "measured": true,
-      "l1_hit_count": 3449170347,
-      "l1_miss_count": 112762691,
-      "l2_hit_count": 92863392,
-      "l2_miss_count": 19899299,
-      "l3_hit_count": 13268785,
-      "l3_miss_count": 6630512,
-      "total_loads": 3621634216,
-      "data_kb": 215.9
+      "l1_hit_count": 8391265173,
+      "l1_miss_count": 274333114,
+      "l2_hit_count": 225921388,
+      "l2_miss_count": 48411726,
+      "l3_hit_count": 32280777,
+      "l3_miss_count": 16130948,
+      "total_loads": 8810841453,
+      "data_kb": 525.3
     }
   },
   "benchmark": {
     "by_scale": {
       "1000": {
         "float64": {
-          "ms": 0.0436,
+          "ms": 0.0217,
           "kb": 85.9
         },
         "uint8": {
-          "ms": 0.0169,
+          "ms": 0.0174,
           "kb": 10.7
         },
-        "speedup": 2.58
+        "speedup": 1.25
       },
       "10000": {
         "float64": {
-          "ms": 0.0373,
+          "ms": 0.0537,
           "kb": 859.4
         },
         "uint8": {
-          "ms": 0.042,
+          "ms": 0.047,
           "kb": 107.4
         },
-        "speedup": 0.89
+        "speedup": 1.14
       },
       "50000": {
         "float64": {
-          "ms": 0.053,
+          "ms": 0.0675,
           "kb": 4296.9
         },
         "uint8": {
-          "ms": 0.0354,
+          "ms": 0.0385,
           "kb": 537.1
         },
-        "speedup": 1.5
+        "speedup": 1.75
       },
       "100000": {
         "float64": {
-          "ms": 0.056,
+          "ms": 0.044,
           "kb": 8593.8
         },
         "uint8": {
-          "ms": 0.042,
+          "ms": 0.0313,
           "kb": 1074.2
         },
-        "speedup": 1.33
+        "speedup": 1.4
       }
     },
-    "float64_access_ms": 0.0847,
-    "uint8_access_ms": 0.033,
-    "speedup": 2.57,
-    "n_samples": 20100,
+    "float64_access_ms": 0.0406,
+    "uint8_access_ms": 0.0411,
+    "speedup": 0.99,
+    "n_samples": 48900,
     "n_features": 11,
     "iterations": 30
   },
   "memory_analysis": {
-    "n_samples": 20100,
+    "n_samples": 48900,
     "n_features": 11,
-    "float64_total_bytes": 1768800,
-    "float64_total_kb": 1727.3,
+    "float64_total_bytes": 4303200,
+    "float64_total_kb": 4202.3,
     "float64_fits_l1d": false,
-    "uint8_total_bytes": 221100,
-    "uint8_total_kb": 215.9,
+    "uint8_total_bytes": 537900,
+    "uint8_total_kb": 525.3,
     "uint8_fits_l1d": false,
     "memory_reduction_pct": 87.5
   },
@@ -351,7 +351,7 @@
     }
   ],
   "cache_analysis": {
-    "n_samples": 20100,
+    "n_samples": 48900,
     "n_features": 11,
     "cache_line_bytes": 64,
     "has_vtune_data": true,
@@ -479,8 +479,8 @@
           "data_kb": 107.4
         }
       },
-      "20100": {
-        "n_samples": 20100,
+      "48900": {
+        "n_samples": 48900,
         "sklearn": {
           "l1d_hit_rate": 0.9718,
           "l2_hit_rate": 0.7778,
@@ -491,14 +491,14 @@
           "l3_only_pct": 0.2,
           "mem_pct": 0.4,
           "measured": true,
-          "l1_hit_count": 6964670893,
-          "l1_miss_count": 119395790,
-          "l2_hit_count": 92863392,
-          "l2_miss_count": 26532398,
-          "l3_hit_count": 9951589,
-          "l3_miss_count": 16580808,
-          "total_loads": 7166984986,
-          "data_kb": 1727.3
+          "l1_hit_count": 16943900831,
+          "l1_miss_count": 290470356,
+          "l2_hit_count": 225921388,
+          "l2_miss_count": 64548968,
+          "l3_hit_count": 24210583,
+          "l3_miss_count": 40338385,
+          "total_loads": 17436097806,
+          "data_kb": 4202.3
         },
         "histogram": {
           "l1d_hit_rate": 0.9524,
@@ -510,14 +510,14 @@
           "l3_only_pct": 0.6,
           "mem_pct": 0.3,
           "measured": true,
-          "l1_hit_count": 3449170347,
-          "l1_miss_count": 112762691,
-          "l2_hit_count": 92863392,
-          "l2_miss_count": 19899299,
-          "l3_hit_count": 13268785,
-          "l3_miss_count": 6630512,
-          "total_loads": 3621634216,
-          "data_kb": 215.9
+          "l1_hit_count": 8391265173,
+          "l1_miss_count": 274333114,
+          "l2_hit_count": 225921388,
+          "l2_miss_count": 48411726,
+          "l3_hit_count": 32280777,
+          "l3_miss_count": 16130948,
+          "total_loads": 8810841453,
+          "data_kb": 525.3
         }
       },
       "50000": {
@@ -654,14 +654,14 @@
       "l3_only_pct": 0.2,
       "mem_pct": 0.4,
       "measured": true,
-      "l1_hit_count": 6964670893,
-      "l1_miss_count": 119395790,
-      "l2_hit_count": 92863392,
-      "l2_miss_count": 26532398,
-      "l3_hit_count": 9951589,
-      "l3_miss_count": 16580808,
-      "total_loads": 7166984986,
-      "data_kb": 1727.3
+      "l1_hit_count": 16943900831,
+      "l1_miss_count": 290470356,
+      "l2_hit_count": 225921388,
+      "l2_miss_count": 64548968,
+      "l3_hit_count": 24210583,
+      "l3_miss_count": 40338385,
+      "total_loads": 17436097806,
+      "data_kb": 4202.3
     },
     "histogram": {
       "l1d_hit_rate": 0.9524,
@@ -673,14 +673,14 @@
       "l3_only_pct": 0.6,
       "mem_pct": 0.3,
       "measured": true,
-      "l1_hit_count": 3449170347,
-      "l1_miss_count": 112762691,
-      "l2_hit_count": 92863392,
-      "l2_miss_count": 19899299,
-      "l3_hit_count": 13268785,
-      "l3_miss_count": 6630512,
-      "total_loads": 3621634216,
-      "data_kb": 215.9
+      "l1_hit_count": 8391265173,
+      "l1_miss_count": 274333114,
+      "l2_hit_count": 225921388,
+      "l2_miss_count": 48411726,
+      "l3_hit_count": 32280777,
+      "l3_miss_count": 16130948,
+      "total_loads": 8810841453,
+      "data_kb": 525.3
     }
   },
   "hardware_info": {
@@ -693,7 +693,7 @@
     "cpu_cores_logical": 16,
     "total_ram_gb": 15.7,
     "python_version": "3.13.13",
-    "numpy_version": "2.3.3",
+    "numpy_version": "2.4.3",
     "sklearn_version": "1.7.2"
   },
   "source_labels": {

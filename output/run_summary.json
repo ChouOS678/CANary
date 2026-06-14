@@ -18,14 +18,14 @@
     "drift_ratio": 0.09,
     "label_noise_ratio": 0.015
   },
-  "training_rows": 20100,
+  "training_rows": 48900,
   "training_label_counts": {
-    "安全": 3310,
-    "重放": 3356,
-    "欺骗": 3409,
-    "DoS": 3348,
-    "模糊": 3352,
-    "UDS非法会话": 3325
+    "安全": 8075,
+    "重放": 8162,
+    "欺骗": 8279,
+    "DoS": 8152,
+    "模糊": 8147,
+    "UDS非法会话": 8085
   },
   "window_count": 6,
   "bus_counts": {
@@ -42,128 +42,128 @@
     "重放": 1,
     "欺骗": 1
   },
-  "accuracy": 0.9638,
+  "accuracy": 0.9674,
   "cv_folds": 5,
-  "cv_mean_accuracy": 0.9702,
-  "cv_std_accuracy": 0.0018,
+  "cv_mean_accuracy": 0.9688,
+  "cv_std_accuracy": 0.0022,
   "cv_fold_accuracies": [
-    0.9684,
-    0.9716,
-    0.9681,
-    0.9729,
-    0.97
+    0.9651,
+    0.9696,
+    0.9708,
+    0.9676,
+    0.9708
   ],
   "confidence": {
-    "min": 0.9771,
-    "mean": 0.9817,
-    "max": 0.9831
+    "min": 0.9746,
+    "mean": 0.9799,
+    "max": 0.9813
   },
   "risk_score": {
-    "min": 0.044,
-    "mean": 0.2885,
-    "max": 0.7845
+    "min": 0.0445,
+    "mean": 0.2882,
+    "max": 0.7831
   },
   "misclassified_count": 0,
   "misclassified_cases": [],
   "hardware": {
-    "duration_sec": 0.51,
-    "samples": 2,
+    "duration_sec": 1.6,
+    "samples": 4,
     "cpu_total_pct": {
-      "avg": 31.8,
-      "peak": 63.5,
+      "avg": 38.4,
+      "peak": 56.0,
       "min": 0.0
     },
     "cpu_per_core_pct": [
       {
-        "avg": 38.9,
-        "peak": 77.8,
+        "avg": 15.4,
+        "peak": 25.7,
         "min": 0.0
       },
       {
-        "avg": 27.9,
-        "peak": 55.9,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 39.7,
-        "peak": 79.4,
+        "avg": 16.3,
+        "peak": 26.3,
         "min": 0.0
       },
       {
-        "avg": 30.9,
-        "peak": 61.8,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 35.3,
-        "peak": 70.6,
+        "avg": 14.7,
+        "peak": 20.5,
         "min": 0.0
       },
       {
-        "avg": 24.2,
-        "peak": 48.5,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 33.8,
-        "peak": 67.6,
+        "avg": 0.7,
+        "peak": 2.9,
         "min": 0.0
       },
       {
-        "avg": 33.8,
-        "peak": 67.6,
+        "avg": 10.0,
+        "peak": 17.1,
         "min": 0.0
       },
       {
-        "avg": 29.4,
-        "peak": 58.8,
+        "avg": 69.4,
+        "peak": 100.0,
         "min": 0.0
       },
       {
-        "avg": 30.9,
-        "peak": 61.8,
+        "avg": 68.8,
+        "peak": 100.0,
         "min": 0.0
       },
       {
-        "avg": 30.9,
-        "peak": 61.8,
+        "avg": 67.3,
+        "peak": 100.0,
         "min": 0.0
       },
       {
-        "avg": 26.4,
-        "peak": 52.9,
+        "avg": 64.9,
+        "peak": 100.0,
         "min": 0.0
       },
       {
-        "avg": 33.8,
-        "peak": 67.6,
+        "avg": 70.8,
+        "peak": 100.0,
         "min": 0.0
       },
       {
-        "avg": 32.4,
-        "peak": 64.7,
+        "avg": 72.2,
+        "peak": 100.0,
         "min": 0.0
       },
       {
-        "avg": 27.9,
-        "peak": 55.9,
+        "avg": 70.8,
+        "peak": 100.0,
         "min": 0.0
       },
       {
-        "avg": 32.4,
-        "peak": 64.7,
+        "avg": 73.7,
+        "peak": 100.0,
         "min": 0.0
       }
     ],
     "mem_system_pct": {
-      "avg": 90.2,
-      "peak": 90.3,
-      "min": 90.2
+      "avg": 92.8,
+      "peak": 93.2,
+      "min": 92.4
     },
     "proc_memory_mb": {
-      "avg": 233.8,
-      "peak": 243.7,
-      "min": 224.0
+      "avg": 279.2,
+      "peak": 289.6,
+      "min": 250.6
     }
   }
 }

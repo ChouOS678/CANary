@@ -3,7 +3,7 @@
   "group_name": "第1组 基线巡航组",
   "theme": "稳态巡航中夹杂少量异常插针",
   "training_seed": 20260401,
-  "samples_per_label": 3350,
+  "samples_per_label": 8150,
   "data_profile": {
     "noise_scale": 1.16,
     "boundary_ratio": 0.12,

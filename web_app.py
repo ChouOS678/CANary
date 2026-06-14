@@ -212,6 +212,20 @@ with st.sidebar:
             # 删除缓存模型文件，强制下次用新参数重训练
             if MODEL_PATH.exists():
                 MODEL_PATH.unlink()
+            # 清除旧性能对比数据（参数变了，旧对比结果已失效）
+            import glob as _glob
+            for _stale_file in [
+                PERF_DIR / "comparison_results.json",
+                PERF_DIR / "perf_analysis.txt",
+                PERF_DIR / "算法效能对比报告.pdf",
+            ]:
+                if _stale_file.exists():
+                    _stale_file.unlink()
+            # 同时清除旧图表文件
+            for _chart in _glob.glob(str(PERF_DIR / "perf_*.png")):
+                Path(_chart).unlink()
+            # 清除旧 PDF 缓存
+            st.session_state.pop("_pdf_report_bytes", None)
             st.cache_resource.clear()
             st.cache_data.clear()
             # 设置 session_state 标记，触发 rerun 后自动执行 pipeline
@@ -352,6 +366,12 @@ with tab_perf:
                     summary_text + "\n\n" + conclusion_text,
                     encoding="utf-8",
                 )
+                st.session_state.pop("_pdf_report_bytes", None)  # 旧 PDF 已失效
+                st.session_state["_last_perf_config"] = {
+                    "samples_per_label": group_config.get("samples_per_label"),
+                    "n_estimators": group_config.get("rf_params", {}).get("n_estimators"),
+                    "max_depth": group_config.get("rf_params", {}).get("max_depth"),
+                }
                 st.success("✅ 性能对比测试完成！")
             except Exception as e:
                 st.error(f"❌ 性能对比失败: {e}")
@@ -362,6 +382,18 @@ with tab_perf:
     if comparison_json.exists():
         comparison = read_json(comparison_json)
         if isinstance(comparison, dict):
+            # ── 对比数据时效性检查 ──
+            _last_cfg = st.session_state.get("_last_perf_config", {})
+            _cur_cfg = {
+                "samples_per_label": group_config.get("samples_per_label"),
+                "n_estimators": group_config.get("rf_params", {}).get("n_estimators"),
+                "max_depth": group_config.get("rf_params", {}).get("max_depth"),
+            }
+            if _last_cfg and _last_cfg != _cur_cfg:
+                st.warning(
+                    "⚠️ 检测到参数已变更，当前性能对比数据可能来自旧参数。"
+                    "请重新点击「运行性能对比测试」以获取最新数据。"
+                )
             c = comparison.get("sklearn", {})
             e = comparison.get("histogram", {})
             mem = comparison.get("memory_analysis", {})
@@ -607,7 +639,20 @@ with tab_perf:
                             pdf_bytes = generate_pdf_report(
                                 comparison, PERF_DIR, conclusion_text
                             )
+                            # 同时保存到本地文件（备用）
+                            pdf_path = PERF_DIR / "算法效能对比报告.pdf"
+                            pdf_path.write_bytes(pdf_bytes)
                             st.session_state["_pdf_report_bytes"] = pdf_bytes
+                            st.success(
+                                f"✅ PDF 生成成功！({len(pdf_bytes)/1024:.0f} KB)\n\n"
+                                f"已保存至: `{pdf_path}`"
+                            )
+                        except ModuleNotFoundError as _mod_err:
+                            st.error(
+                                f"缺少依赖包: {_mod_err.name}。"
+                                f"请在终端运行: pip install {_mod_err.name}"
+                                f"  (或 pip install fpdf2)"
+                            )
                         except Exception as _pdf_err:
                             st.error(f"PDF 生成失败: {_pdf_err}")
                     if "_pdf_report_bytes" in st.session_state:
