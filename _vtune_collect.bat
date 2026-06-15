@@ -1,7 +1,7 @@
 @echo off
 set VTUNE="D:\Program Files (x86)\Intel\oneAPI\vtune\2026.2\bin64\vtune.exe"
 set PYTHON=%~dp0.venv_web313\Scripts\python.exe
-set SCRIPT=%~dp0_wsl_cache_measure.py
+set SCRIPT=%~dp0_vtune_cache_measure.py
 set OUTDIR=%~dp0output\vtune_results
 
 if not exist "%OUTDIR%" mkdir "%OUTDIR%"

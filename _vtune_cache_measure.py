@@ -5,8 +5,8 @@
 使 VTune 能够采集 MEM_LOAD_RETIRED 等微架构事件。
 
 用法（通常由 _vtune_collect.bat 自动调用）：
-    python _wsl_cache_measure.py --algo sklearn    --samples 5000
-    python _wsl_cache_measure.py --algo histogram  --samples 20000
+    python _vtune_cache_measure.py --algo sklearn    --samples 5000
+    python _vtune_cache_measure.py --algo histogram  --samples 20000
 """
 
 from __future__ import annotations
