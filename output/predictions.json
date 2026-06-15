@@ -19,23 +19,23 @@
     "total_packets": 1481,
     "expected_label": "安全",
     "predicted_label": "安全",
-    "confidence": 0.9813,
-    "risk_score": 0.0475,
+    "confidence": 0.9726,
+    "risk_score": 0.0503,
     "abnormal_packets": 54,
     "normal_packets": 1427,
-    "attack_intensity": 2.4,
+    "attack_intensity": 2.5,
     "severity_split": {
       "low": 0,
       "medium": 0,
       "high": 0
     },
     "probabilities": {
-      "DoS": 0.0,
-      "UDS非法会话": 0.0002,
-      "安全": 0.9813,
-      "模糊": 0.0,
-      "欺骗": 0.0078,
-      "重放": 0.0106
+      "DoS": 0.0003,
+      "UDS非法会话": 0.0009,
+      "安全": 0.9726,
+      "模糊": 0.0008,
+      "欺骗": 0.0095,
+      "重放": 0.0158
     }
   },
   {
@@ -58,23 +58,23 @@
     "total_packets": 1420,
     "expected_label": "安全",
     "predicted_label": "安全",
-    "confidence": 0.9811,
-    "risk_score": 0.0445,
+    "confidence": 0.9726,
+    "risk_score": 0.0472,
     "abnormal_packets": 50,
     "normal_packets": 1370,
-    "attack_intensity": 2.2,
+    "attack_intensity": 2.4,
     "severity_split": {
       "low": 0,
       "medium": 0,
       "high": 0
     },
     "probabilities": {
-      "DoS": 0.0,
-      "UDS非法会话": 0.0002,
-      "安全": 0.9811,
-      "模糊": 0.0,
-      "欺骗": 0.0079,
-      "重放": 0.0107
+      "DoS": 0.0003,
+      "UDS非法会话": 0.0009,
+      "安全": 0.9726,
+      "模糊": 0.0008,
+      "欺骗": 0.0095,
+      "重放": 0.0158
     }
   },
   {
@@ -97,23 +97,23 @@
     "total_packets": 2236,
     "expected_label": "重放",
     "predicted_label": "重放",
-    "confidence": 0.9797,
-    "risk_score": 0.7584,
-    "abnormal_packets": 1195,
-    "normal_packets": 1041,
-    "attack_intensity": 37.9,
+    "confidence": 0.9608,
+    "risk_score": 0.7478,
+    "abnormal_packets": 1183,
+    "normal_packets": 1053,
+    "attack_intensity": 37.4,
     "severity_split": {
-      "low": 335,
-      "medium": 526,
-      "high": 334
+      "low": 331,
+      "medium": 521,
+      "high": 331
     },
     "probabilities": {
-      "DoS": 0.0002,
-      "UDS非法会话": 0.009,
-      "安全": 0.0106,
-      "模糊": 0.0001,
-      "欺骗": 0.0003,
-      "重放": 0.9797
+      "DoS": 0.0014,
+      "UDS非法会话": 0.0116,
+      "安全": 0.0198,
+      "模糊": 0.0013,
+      "欺骗": 0.0051,
+      "重放": 0.9608
     }
   },
   {
@@ -136,23 +136,23 @@
     "total_packets": 1429,
     "expected_label": "安全",
     "predicted_label": "安全",
-    "confidence": 0.9813,
-    "risk_score": 0.048,
+    "confidence": 0.9726,
+    "risk_score": 0.0508,
     "abnormal_packets": 52,
     "normal_packets": 1377,
-    "attack_intensity": 2.4,
+    "attack_intensity": 2.5,
     "severity_split": {
       "low": 0,
       "medium": 0,
       "high": 0
     },
     "probabilities": {
-      "DoS": 0.0,
-      "UDS非法会话": 0.0002,
-      "安全": 0.9813,
-      "模糊": 0.0,
-      "欺骗": 0.0078,
-      "重放": 0.0106
+      "DoS": 0.0003,
+      "UDS非法会话": 0.0009,
+      "安全": 0.9726,
+      "模糊": 0.0008,
+      "欺骗": 0.0095,
+      "重放": 0.0158
     }
   },
   {
@@ -175,23 +175,23 @@
     "total_packets": 2993,
     "expected_label": "欺骗",
     "predicted_label": "欺骗",
-    "confidence": 0.9746,
-    "risk_score": 0.7831,
-    "abnormal_packets": 1638,
-    "normal_packets": 1355,
-    "attack_intensity": 39.2,
+    "confidence": 0.9508,
+    "risk_score": 0.7698,
+    "abnormal_packets": 1617,
+    "normal_packets": 1376,
+    "attack_intensity": 38.5,
     "severity_split": {
-      "low": 459,
-      "medium": 721,
-      "high": 458
+      "low": 453,
+      "medium": 711,
+      "high": 453
     },
     "probabilities": {
-      "DoS": 0.0098,
-      "UDS非法会话": 0.0022,
-      "安全": 0.0027,
-      "模糊": 0.0101,
-      "欺骗": 0.9746,
-      "重放": 0.0006
+      "DoS": 0.0135,
+      "UDS非法会话": 0.006,
+      "安全": 0.0132,
+      "模糊": 0.0121,
+      "欺骗": 0.9508,
+      "重放": 0.0045
     }
   },
   {
@@ -214,23 +214,23 @@
     "total_packets": 1361,
     "expected_label": "安全",
     "predicted_label": "安全",
-    "confidence": 0.9813,
-    "risk_score": 0.0478,
+    "confidence": 0.9725,
+    "risk_score": 0.0506,
     "abnormal_packets": 50,
     "normal_packets": 1311,
-    "attack_intensity": 2.4,
+    "attack_intensity": 2.5,
     "severity_split": {
       "low": 0,
       "medium": 0,
       "high": 0
     },
     "probabilities": {
-      "DoS": 0.0,
-      "UDS非法会话": 0.0002,
-      "安全": 0.9813,
-      "模糊": 0.0,
-      "欺骗": 0.0078,
-      "重放": 0.0106
+      "DoS": 0.0003,
+      "UDS非法会话": 0.0009,
+      "安全": 0.9725,
+      "模糊": 0.0008,
+      "欺骗": 0.0096,
+      "重放": 0.0159
     }
   }
 ]

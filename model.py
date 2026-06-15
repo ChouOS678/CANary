@@ -12,7 +12,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
 
-from config import FEATURES, LABELS
+from config import DATA_PROFILE_CN, FEATURES, LABELS, RF_PARAMS_CN
 from data_generator import merged_data_profile
 from utils import HardwareMonitor, logger, to_counts
 
@@ -325,8 +325,15 @@ def make_run_summary(
         "group_id": group_config["group_id"],
         "group_name": group_config["group_name"],
         "theme": group_config["theme"],
+        "group_description": group_config.get("group_description", ""),
         "rf_params": dict(group_config["rf_params"]),
+        "rf_params_desc": dict(group_config.get("rf_params_desc", {})),
         "data_profile": merged_data_profile(group_config),
+        "data_profile_desc": dict(group_config.get("data_profile_desc", {})),
+        "case_blueprints_desc": [
+            {"case_name": bp.get("case_name", ""), "scenario_desc": bp.get("scenario_desc", "")}
+            for bp in group_config.get("case_blueprints", [])
+        ],
         "training_rows": len(training_rows),
         "training_label_counts": to_counts(training_rows, "label"),
         "window_count": len(input_cases),
@@ -355,14 +362,27 @@ def make_run_summary(
 
 
 def format_run_summary(summary: dict[str, object]) -> str:
-    """Format summary as readable text."""
-    rf_lines = [
-        f"  - {key}: {value}" for key, value in dict(summary["rf_params"]).items()
-    ]
-    data_lines = [
-        f"  - {key}: {value}"
-        for key, value in dict(summary["data_profile"]).items()
-    ]
+    """Format summary as readable text with Chinese labels."""
+
+    def _cn_label(key: str, cn_map: dict[str, str]) -> str:
+        return f"{cn_map.get(key, key)}（{key}）" if key in cn_map else key
+
+    rf_desc = dict(summary.get("rf_params_desc", {}))
+    rf_lines = []
+    for key, value in dict(summary["rf_params"]).items():
+        label = _cn_label(key, RF_PARAMS_CN)
+        desc = rf_desc.get(key, "")
+        suffix = f"  ── {desc}" if desc else ""
+        rf_lines.append(f"  - {label}: {value}{suffix}")
+
+    dp_desc = dict(summary.get("data_profile_desc", {}))
+    data_lines = []
+    for key, value in dict(summary["data_profile"]).items():
+        label = _cn_label(key, DATA_PROFILE_CN)
+        desc = dp_desc.get(key, "")
+        suffix = f"  ── {desc}" if desc else ""
+        data_lines.append(f"  - {label}: {value}{suffix}")
+
     training_lines = [
         f"  - {key}: {value}"
         for key, value in dict(summary["training_label_counts"]).items()
@@ -379,16 +399,32 @@ def format_run_summary(summary: dict[str, object]) -> str:
         f"  - {key}: {value}" for key, value in dict(summary["bus_counts"]).items()
     ]
 
+    # 预测场景描述（如果有）
+    case_desc_lines = []
+    for bp in summary.get("case_blueprints_desc", []):
+        desc = bp.get("scenario_desc", "")
+        if desc:
+            case_desc_lines.append(f"  [{bp['case_name']}] {desc}")
+
     parts = [
         f"分组：{summary['group_name']}",
         f"主题：{summary['theme']}",
+    ]
+    group_desc = summary.get("group_description", "")
+    if group_desc:
+        parts.append(f"场景说明：{group_desc}")
+    parts.extend([
+        "",
         "随机森林参数：",
         *rf_lines,
+        "",
         "数据多样性参数：",
         *data_lines,
-        f"训练样本总数：{summary['training_rows']}",
+        "",
+        f"训练样本总数：{summary['training_rows']:,}",
         "训练类别分布：",
         *training_lines,
+        "",
         f"输入窗口数量：{summary['window_count']}",
         "总线分布：",
         *bus_lines,
@@ -396,11 +432,16 @@ def format_run_summary(summary: dict[str, object]) -> str:
         *expected_lines,
         "预测标签分布：",
         *predicted_lines,
+    ])
+    if case_desc_lines:
+        parts.extend(["", "预测场景时序说明：", *case_desc_lines])
+    parts.extend([
+        "",
         f"模型准确率 (hold-out)：{summary['accuracy']:.4f}",
         f"交叉验证准确率 ({summary.get('cv_folds', 0)}-fold)：{summary.get('cv_mean_accuracy', 0):.4f} ± {summary.get('cv_std_accuracy', 0):.4f}",
         f"置信度区间：{summary['confidence']['min']:.4f} / {summary['confidence']['mean']:.4f} / {summary['confidence']['max']:.4f}",
         f"风险分数区间：{summary['risk_score']['min']:.4f} / {summary['risk_score']['mean']:.4f} / {summary['risk_score']['max']:.4f}",
         f"误判窗口数：{summary['misclassified_count']}",
-    ]
+    ])
 
     return "\n".join(parts)

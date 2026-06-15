@@ -1,4 +1,4 @@
-"""CANary configuration constants for anomaly detection system."""
+"""CANary configuration constants for time-series semantic anomaly detection system."""
 
 FEATURES = [
     "flow_kbps_mean",
@@ -191,6 +191,39 @@ DATA_PROFILE_DEFAULTS = {
     "boundary_ratio": 0.14,
     "drift_ratio": 0.1,
     "label_noise_ratio": 0.02,
+}
+
+DATA_PROFILE_CN = {
+    "noise_scale": "特征噪声缩放系数",
+    "boundary_ratio": "边界样本比例",
+    "drift_ratio": "漂移样本比例",
+    "label_noise_ratio": "标签噪声比例",
+}
+
+RF_PARAMS_CN = {
+    "n_estimators": "决策树数量",
+    "max_depth": "最大树深度",
+    "min_samples_split": "节点最小分裂样本数",
+    "min_samples_leaf": "叶节点最小样本数",
+    "max_features": "最大特征采样数",
+    "random_state": "随机种子",
+    "class_weight": "类别权重策略",
+    "n_jobs": "并行线程数",
+}
+
+PREDICTION_COLUMNS_CN = {
+    "window_id": "窗口编号",
+    "timestamp": "时间戳",
+    "case_name": "场景名称",
+    "bus": "总线",
+    "expected_label": "预期标签",
+    "predicted_label": "预测标签",
+    "confidence": "置信度",
+    "risk_score": "风险分数",
+    "total_packets": "总报文数",
+    "abnormal_packets": "异常报文数",
+    "normal_packets": "正常报文数",
+    "attack_intensity": "攻击强度",
 }
 
 

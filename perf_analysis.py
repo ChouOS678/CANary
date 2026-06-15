@@ -95,7 +95,7 @@ def run_comparison(
     predicted_histogram = predict_histogram_cases(model_histogram, input_cases)
     histogram_predict_time = time.perf_counter() - t0
 
-    # ── NLP-Transformer 算法 ────────────────────────────
+    # ── NLP 文本分类算法 ────────────────────────────
     nlp_results: dict[str, Any] | None = None
     nlp_train_time = 0.0
     nlp_predict_time = 0.0

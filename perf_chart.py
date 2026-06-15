@@ -61,7 +61,7 @@ def _setup_matplotlib() -> None:
 _COLORS = {
     "sklearn":          "#ff7b72",   # 红色系 — scikit-learn
     "histogram":        "#3fb950",   # 绿色系 — 直方图算法
-    "nlp":              "#58a6ff",   # 蓝色系 — NLP-Transformer
+    "nlp":              "#58a6ff",   # 蓝色系 — NLP 文本分类
     "sklearn_light":    "#ffa198",
     "histogram_light":  "#56d364",
     "nlp_light":        "#79c0ff",
@@ -583,9 +583,9 @@ def _chart_radar(results: dict[str, Any], output_dir: Path) -> None:
     plt.close(fig)
 
 
-# ── 图 8：NLP-Transformer 模型对比 ────────────────────────────
+# ── 图 8：NLP 文本分类模型对比 ────────────────────────────
 def _chart_nlp_model_compare(results: dict[str, Any], output_dir: Path) -> None:
-    """三种算法准确率 + 训练耗时对比（含 NLP-Transformer）。"""
+    """三种算法准确率 + 训练耗时对比（含 NLP 文本分类）。"""
     s = results["sklearn"]
     h = results["histogram"]
     nlp = results.get("nlp", {})
@@ -596,7 +596,7 @@ def _chart_nlp_model_compare(results: dict[str, Any], output_dir: Path) -> None:
 
     # ── 左：准确率对比 ──
     labels = ["scikit-learn\n(RF float64)", "直方图算法\n(RF uint8)",
-              "NLP-Transformer\n(CAN序列)"]
+              "NLP 文本分类\n(TF-IDF+LogReg/SVC)"]
     accs = [s["accuracy"], h["accuracy"], nlp["accuracy"]]
     colors = [_COLORS["sklearn"], _COLORS["histogram"], _COLORS["nlp"]]
     x = np.arange(len(labels))
@@ -625,13 +625,12 @@ def _chart_nlp_model_compare(results: dict[str, Any], output_dir: Path) -> None:
 
     # NLP 标注
     nlp_label = (
-        f"NLP 模型: {nlp.get('d_model', '?')}d, "
-        f"{nlp.get('nhead', '?')}head, "
-        f"{nlp.get('num_layers', '?')}层, "
-        f"{nlp.get('n_params', 0):,}参"
+        f"NLP 模型: {nlp.get('model_name', 'logreg')}, "
+        f"词表 {nlp.get('vocab_size', '?')}，"
+        f"特征维度 {nlp.get('n_features', '?')}"
     )
     fig.suptitle(
-        f"传统机器学习 vs NLP-Transformer 对比\n"
+        f"传统机器学习 vs NLP 文本分类对比\n"
         f"{nlp_label} | 设备: {nlp.get('device', 'cpu')} | "
         f"CV: {nlp.get('cv_mean_accuracy', 0):.4f}",
         fontsize=12, fontweight="bold", y=1.04)

@@ -23,7 +23,7 @@ _FONT_CANDIDATES = [
 ]
 
 _CHART_FILES = [
-    ("perf_nlp_compare.png", "NLP-Transformer vs 传统机器学习对比"),
+    ("perf_nlp_compare.png", "NLP 文本分类 vs 传统机器学习对比"),
     ("perf_timing_compare.png", "训练 / 预测耗时对比"),
     ("perf_cache_hit_rate.png", "缓存命中率对比 (Intel VTune PMC 实测)"),
     ("perf_cpu_compare.png", "CPU 利用率对比"),
@@ -53,7 +53,7 @@ class _ReportPDF(FPDF):
     def header(self):
         self.set_font("zh", "B", 9)
         self.set_text_color(120, 120, 120)
-        self.cell(0, 8, "算法效能对比分析报告  |  CANary 金丝雀异常检测系统", align="R")
+        self.cell(0, 8, "算法效能对比分析报告  |  CANary 金丝雀时序语义异常检测系统", align="R")
         self.ln(12)
         self.set_draw_color(200, 200, 200)
         self.line(10, self.get_y(), 200, self.get_y())
@@ -235,43 +235,34 @@ def generate_pdf_report(
     pdf.kv_line("直方图算法准确率", f"{hi.get('accuracy', 0):.4f}")
     pdf.ln(4)
 
-    # ── NLP-Transformer 分析（如果存在）──
+    # ── NLP 文本分类分析（如果存在）──
     nlp_data = results.get("nlp", {})
     if nlp_data and nlp_data.get("accuracy"):
-        pdf.section_title("2.1 NLP-Transformer 模型分析")
+        pdf.section_title("2.1 NLP 文本分类分析")
         pdf.set_font("zh", "", 9)
         pdf.set_text_color(120, 120, 120)
         pdf.multi_cell(
             0, 5,
-            "NLP 方法将每条 CAN 消息（CAN ID + 数据载荷）视为 token，"
-            "整个消息序列作为「句子」，利用多头自注意力机制端到端学习攻击模式，"
+            "NLP 文本分类方法将每条 CAN 消息（CAN ID + 数据载荷）视为 token，"
+            "整个消息序列拼接为「句子」，通过 TF-IDF 向量化后使用经典线性分类器完成识别，"
             "无需人工设计特征。"
         )
         pdf.ln(2)
 
         pdf.kv_line(
-            "NLP-Transformer 准确率",
+            "NLP 文本分类准确率",
             f"{nlp_data['accuracy']:.4f}", bold_val=True,
         )
         pdf.kv_line(
             "训练耗时",
             f"{nlp_data.get('train_time_sec', 0):.2f}s"
         )
-        n_params = nlp_data.get("n_params", 0)
-        if n_params > 1_000_000:
-            params_str = f"{n_params / 1_000_000:.1f}M"
-        elif n_params > 1_000:
-            params_str = f"{n_params / 1_000:.1f}K"
-        else:
-            params_str = str(n_params)
-        pdf.kv_line("模型参数量", f"{n_params:,} ({params_str})")
         pdf.kv_line(
-            "架构",
-            f"Transformer Encoder: d_model={nlp_data.get('d_model', '?')}, "
-            f"nhead={nlp_data.get('nhead', '?')}, "
-            f"layers={nlp_data.get('num_layers', '?')}"
+            "分类器",
+            f"{nlp_data.get('model_name', 'logreg')} (TF-IDF 向量化)"
         )
         pdf.kv_line("词汇表大小", f"{nlp_data.get('vocab_size', '?')}")
+        pdf.kv_line("特征维度", f"{nlp_data.get('n_features', '?')}")
         pdf.kv_line("序列长度", f"{nlp_data.get('seq_len', '?')} 条 CAN 消息")
         pdf.kv_line("设备", f"{nlp_data.get('device', 'cpu')}")
         nlp_cv = nlp_data.get("cv_mean_accuracy", 0)
@@ -291,11 +282,11 @@ def generate_pdf_report(
         pdf.set_text_color(40, 40, 40)
         pdf.multi_cell(
             0, 5.5,
-            "1. 无需人工特征工程：Transformer 直接从原始 CAN 消息序列学习表示，"
+            "1. 无需人工特征工程：TF-IDF 自动从 token 化消息中提取特征，"
             "避免了传统方法中时间窗聚合、特征选择等手工步骤。\n"
-            "2. 序列建模能力：自注意力机制天然适合捕捉 CAN 消息间的长距离依赖关系，"
-            "可识别跨多个时间窗的复杂攻击模式。\n"
-            "3. 可扩展性：模型架构独立于 CAN 总线拓扑，可迁移到不同车型和总线配置。"
+            "2. 训练速度快：经典线性分类器在 CPU 上即可快速训练，"
+            "无需 GPU 等专用硬件。\n"
+            "3. 适合作为基线：可快速验证 CAN 消息文本化方案的可行性。"
         )
         pdf.ln(3)
 
@@ -306,12 +297,11 @@ def generate_pdf_report(
         pdf.set_text_color(40, 40, 40)
         pdf.multi_cell(
             0, 5.5,
-            "1. 训练开销较大：Transformer 参数量通常远大于 RandomForest，"
-            "需要更多训练时间和计算资源。\n"
-            "2. GPU 依赖：在 CPU 上训练 Transformer 速度较慢，"
-            "建议使用 CUDA 加速以获得最佳性能。\n"
-            "3. 可解释性不足：相比决策树的特征重要性排名，"
-            "Transformer 的注意力权重可解释性较弱。"
+            "1. 序列建模能力有限：TF-IDF 仅捕捉词频信息，"
+            "无法建模消息间的时序语义和上下文依赖。\n"
+            "2. 泛化能力弱：对标签噪声和罕见 token 敏感，"
+            "泛化能力弱于决策树集成方法。\n"
+            "3. 可解释性一般：TF-IDF 权重的可解释性不如决策树特征重要性排名。"
         )
         pdf.ln(4)
 

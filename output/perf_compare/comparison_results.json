@@ -1,102 +1,102 @@
 {
   "config": {
-    "n_samples": 48900,
-    "n_train": 38142,
-    "n_test": 10758,
+    "n_samples": 18600,
+    "n_train": 14508,
+    "n_test": 4092,
     "n_features": 11,
-    "samples_per_label": 8150
+    "samples_per_label": 3100
   },
   "sklearn": {
     "label": "传统 scikit-learn 算法",
-    "accuracy": 0.9674,
-    "train_time_sec": 36.8343,
-    "predict_time_sec": 0.0621,
-    "cpu_avg_pct": 58.1,
-    "cpu_peak_pct": 88.7,
+    "accuracy": 0.9638,
+    "train_time_sec": 6.4262,
+    "predict_time_sec": 0.0741,
+    "cpu_avg_pct": 19.9,
+    "cpu_peak_pct": 39.9,
     "cpu_per_core": [
       {
-        "avg": 71.4,
-        "peak": 92.1,
+        "avg": 20.6,
+        "peak": 41.2,
         "min": 0.0
       },
       {
-        "avg": 67.1,
-        "peak": 87.9,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 69.3,
-        "peak": 91.9,
+        "avg": 21.2,
+        "peak": 42.4,
         "min": 0.0
       },
       {
-        "avg": 67.7,
-        "peak": 87.9,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 65.9,
-        "peak": 94.1,
+        "avg": 22.1,
+        "peak": 44.1,
         "min": 0.0
       },
       {
-        "avg": 67.5,
-        "peak": 94.1,
+        "avg": 1.2,
+        "peak": 2.4,
         "min": 0.0
       },
       {
-        "avg": 64.2,
-        "peak": 97.0,
+        "avg": 14.1,
+        "peak": 28.1,
         "min": 0.0
       },
       {
-        "avg": 63.6,
-        "peak": 100.0,
+        "avg": 2.5,
+        "peak": 5.0,
         "min": 0.0
       },
       {
-        "avg": 59.6,
-        "peak": 91.2,
+        "avg": 30.9,
+        "peak": 61.8,
         "min": 0.0
       },
       {
-        "avg": 57.3,
-        "peak": 94.3,
+        "avg": 27.2,
+        "peak": 54.5,
         "min": 0.0
       },
       {
-        "avg": 54.4,
-        "peak": 87.9,
+        "avg": 28.8,
+        "peak": 57.6,
         "min": 0.0
       },
       {
-        "avg": 51.7,
-        "peak": 91.2,
+        "avg": 18.6,
+        "peak": 37.1,
         "min": 0.0
       },
       {
-        "avg": 53.7,
-        "peak": 93.9,
+        "avg": 34.9,
+        "peak": 69.7,
         "min": 0.0
       },
       {
-        "avg": 49.0,
-        "peak": 90.9,
+        "avg": 31.8,
+        "peak": 63.6,
         "min": 0.0
       },
       {
-        "avg": 38.1,
-        "peak": 84.8,
+        "avg": 41.2,
+        "peak": 82.4,
         "min": 0.0
       },
       {
-        "avg": 30.2,
-        "peak": 70.6,
+        "avg": 34.9,
+        "peak": 69.7,
         "min": 0.0
       }
     ],
-    "memory_peak_mb": 1255.9,
-    "data_size_kb": 4202.3,
+    "memory_peak_mb": 291.2,
+    "data_size_kb": 1598.4,
     "cache": {
       "l1d_hit_rate": 0.9718,
       "l2_hit_rate": 0.7778,
@@ -107,83 +107,48 @@
       "l3_only_pct": 0.2,
       "mem_pct": 0.4,
       "measured": true,
-      "l1_hit_count": 16943900831,
-      "l1_miss_count": 290470356,
-      "l2_hit_count": 225921388,
-      "l2_miss_count": 64548968,
-      "l3_hit_count": 24210583,
-      "l3_miss_count": 40338385,
-      "total_loads": 17436097806,
-      "data_kb": 4202.3
+      "l1_hit_count": 6444919334,
+      "l1_miss_count": 110485657,
+      "l2_hit_count": 85933288,
+      "l2_miss_count": 24552369,
+      "l3_hit_count": 9208933,
+      "l3_miss_count": 15343434,
+      "total_loads": 6632135361,
+      "data_kb": 1598.4
     }
   },
   "histogram": {
     "label": "直方图离散化算法",
-    "accuracy": 0.9676,
-    "train_time_sec": 7.0799,
-    "predict_time_sec": 0.0531,
-    "encode_time_sec": 0.0853,
-    "cpu_avg_pct": 31.6,
-    "cpu_peak_pct": 47.6,
+    "accuracy": 0.9636,
+    "train_time_sec": 4.1974,
+    "predict_time_sec": 0.0765,
+    "encode_time_sec": 0.0498,
+    "cpu_avg_pct": 11.9,
+    "cpu_peak_pct": 23.9,
     "cpu_per_core": [
       {
-        "avg": 51.5,
-        "peak": 81.8,
+        "avg": 12.1,
+        "peak": 24.2,
         "min": 0.0
       },
       {
-        "avg": 45.9,
-        "peak": 80.0,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 47.9,
-        "peak": 81.8,
+        "avg": 3.1,
+        "peak": 6.2,
         "min": 0.0
       },
       {
-        "avg": 44.5,
-        "peak": 66.7,
+        "avg": 0.0,
+        "peak": 0.0,
         "min": 0.0
       },
       {
-        "avg": 51.5,
-        "peak": 78.8,
-        "min": 0.0
-      },
-      {
-        "avg": 47.5,
-        "peak": 72.7,
-        "min": 0.0
-      },
-      {
-        "avg": 51.5,
-        "peak": 84.8,
-        "min": 0.0
-      },
-      {
-        "avg": 47.5,
-        "peak": 72.7,
-        "min": 0.0
-      },
-      {
-        "avg": 44.0,
-        "peak": 71.4,
-        "min": 0.0
-      },
-      {
-        "avg": 39.7,
-        "peak": 75.8,
-        "min": 0.0
-      },
-      {
-        "avg": 25.6,
-        "peak": 56.2,
-        "min": 0.0
-      },
-      {
-        "avg": 10.3,
-        "peak": 28.1,
+        "avg": 7.8,
+        "peak": 15.6,
         "min": 0.0
       },
       {
@@ -197,18 +162,53 @@
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 7.8,
+        "peak": 15.6,
         "min": 0.0
       },
       {
-        "avg": 0.0,
-        "peak": 0.0,
+        "avg": 15.6,
+        "peak": 31.2,
+        "min": 0.0
+      },
+      {
+        "avg": 10.9,
+        "peak": 21.9,
+        "min": 0.0
+      },
+      {
+        "avg": 4.8,
+        "peak": 9.7,
+        "min": 0.0
+      },
+      {
+        "avg": 3.2,
+        "peak": 6.5,
+        "min": 0.0
+      },
+      {
+        "avg": 34.9,
+        "peak": 69.7,
+        "min": 0.0
+      },
+      {
+        "avg": 34.9,
+        "peak": 69.7,
+        "min": 0.0
+      },
+      {
+        "avg": 34.4,
+        "peak": 68.8,
+        "min": 0.0
+      },
+      {
+        "avg": 43.8,
+        "peak": 87.5,
         "min": 0.0
       }
     ],
-    "memory_peak_mb": 1254.7,
-    "data_size_kb": 525.3,
+    "memory_peak_mb": 293.1,
+    "data_size_kb": 199.8,
     "cache": {
       "l1d_hit_rate": 0.9524,
       "l2_hit_rate": 0.8235,
@@ -219,78 +219,78 @@
       "l3_only_pct": 0.6,
       "mem_pct": 0.3,
       "measured": true,
-      "l1_hit_count": 8391265173,
-      "l1_miss_count": 274333114,
-      "l2_hit_count": 225921388,
-      "l2_miss_count": 48411726,
-      "l3_hit_count": 32280777,
-      "l3_miss_count": 16130948,
-      "total_loads": 8810841453,
-      "data_kb": 525.3
+      "l1_hit_count": 3191769575,
+      "l1_miss_count": 104347565,
+      "l2_hit_count": 85933288,
+      "l2_miss_count": 18414277,
+      "l3_hit_count": 12278577,
+      "l3_miss_count": 6135698,
+      "total_loads": 3351363006,
+      "data_kb": 199.8
     }
   },
   "benchmark": {
     "by_scale": {
       "1000": {
         "float64": {
-          "ms": 0.011,
+          "ms": 0.065,
           "kb": 85.9
         },
         "uint8": {
-          "ms": 0.0104,
+          "ms": 0.0592,
           "kb": 10.7
         },
-        "speedup": 1.06
+        "speedup": 1.1
       },
       "10000": {
         "float64": {
-          "ms": 0.0229,
+          "ms": 0.1011,
           "kb": 859.4
         },
         "uint8": {
-          "ms": 0.0149,
+          "ms": 0.1007,
           "kb": 107.4
         },
-        "speedup": 1.53
+        "speedup": 1.0
       },
       "50000": {
         "float64": {
-          "ms": 0.0301,
+          "ms": 0.3335,
           "kb": 4296.9
         },
         "uint8": {
-          "ms": 0.0286,
+          "ms": 0.1424,
           "kb": 537.1
         },
-        "speedup": 1.05
+        "speedup": 2.34
       },
       "100000": {
         "float64": {
-          "ms": 0.0484,
+          "ms": 0.0437,
           "kb": 8593.8
         },
         "uint8": {
-          "ms": 0.1683,
+          "ms": 0.0328,
           "kb": 1074.2
         },
-        "speedup": 0.29
+        "speedup": 1.33
       }
     },
-    "float64_access_ms": 0.0226,
-    "uint8_access_ms": 0.0154,
-    "speedup": 1.47,
-    "n_samples": 48900,
+    "float64_access_ms": 0.0423,
+    "uint8_access_ms": 0.0396,
+    "speedup": 1.07,
+    "n_samples": 18600,
     "n_features": 11,
     "iterations": 30
   },
   "memory_analysis": {
-    "n_samples": 48900,
+    "n_samples": 18600,
     "n_features": 11,
-    "float64_total_bytes": 4303200,
-    "float64_total_kb": 4202.3,
+    "float64_total_bytes": 1636800,
+    "float64_total_kb": 1598.4,
     "float64_fits_l1d": false,
-    "uint8_total_bytes": 537900,
-    "uint8_total_kb": 525.3,
+    "uint8_total_bytes": 204600,
+    "uint8_total_kb": 199.8,
     "uint8_fits_l1d": false,
     "memory_reduction_pct": 87.5
   },
@@ -351,7 +351,7 @@
     }
   ],
   "cache_analysis": {
-    "n_samples": 48900,
+    "n_samples": 18600,
     "n_features": 11,
     "cache_line_bytes": 64,
     "has_vtune_data": true,
@@ -479,8 +479,8 @@
           "data_kb": 107.4
         }
       },
-      "48900": {
-        "n_samples": 48900,
+      "18600": {
+        "n_samples": 18600,
         "sklearn": {
           "l1d_hit_rate": 0.9718,
           "l2_hit_rate": 0.7778,
@@ -491,14 +491,14 @@
           "l3_only_pct": 0.2,
           "mem_pct": 0.4,
           "measured": true,
-          "l1_hit_count": 16943900831,
-          "l1_miss_count": 290470356,
-          "l2_hit_count": 225921388,
-          "l2_miss_count": 64548968,
-          "l3_hit_count": 24210583,
-          "l3_miss_count": 40338385,
-          "total_loads": 17436097806,
-          "data_kb": 4202.3
+          "l1_hit_count": 6444919334,
+          "l1_miss_count": 110485657,
+          "l2_hit_count": 85933288,
+          "l2_miss_count": 24552369,
+          "l3_hit_count": 9208933,
+          "l3_miss_count": 15343434,
+          "total_loads": 6632135361,
+          "data_kb": 1598.4
         },
         "histogram": {
           "l1d_hit_rate": 0.9524,
@@ -510,14 +510,14 @@
           "l3_only_pct": 0.6,
           "mem_pct": 0.3,
           "measured": true,
-          "l1_hit_count": 8391265173,
-          "l1_miss_count": 274333114,
-          "l2_hit_count": 225921388,
-          "l2_miss_count": 48411726,
-          "l3_hit_count": 32280777,
-          "l3_miss_count": 16130948,
-          "total_loads": 8810841453,
-          "data_kb": 525.3
+          "l1_hit_count": 3191769575,
+          "l1_miss_count": 104347565,
+          "l2_hit_count": 85933288,
+          "l2_miss_count": 18414277,
+          "l3_hit_count": 12278577,
+          "l3_miss_count": 6135698,
+          "total_loads": 3351363006,
+          "data_kb": 199.8
         }
       },
       "50000": {
@@ -654,14 +654,14 @@
       "l3_only_pct": 0.2,
       "mem_pct": 0.4,
       "measured": true,
-      "l1_hit_count": 16943900831,
-      "l1_miss_count": 290470356,
-      "l2_hit_count": 225921388,
-      "l2_miss_count": 64548968,
-      "l3_hit_count": 24210583,
-      "l3_miss_count": 40338385,
-      "total_loads": 17436097806,
-      "data_kb": 4202.3
+      "l1_hit_count": 6444919334,
+      "l1_miss_count": 110485657,
+      "l2_hit_count": 85933288,
+      "l2_miss_count": 24552369,
+      "l3_hit_count": 9208933,
+      "l3_miss_count": 15343434,
+      "total_loads": 6632135361,
+      "data_kb": 1598.4
     },
     "histogram": {
       "l1d_hit_rate": 0.9524,
@@ -673,14 +673,14 @@
       "l3_only_pct": 0.6,
       "mem_pct": 0.3,
       "measured": true,
-      "l1_hit_count": 8391265173,
-      "l1_miss_count": 274333114,
-      "l2_hit_count": 225921388,
-      "l2_miss_count": 48411726,
-      "l3_hit_count": 32280777,
-      "l3_miss_count": 16130948,
-      "total_loads": 8810841453,
-      "data_kb": 525.3
+      "l1_hit_count": 3191769575,
+      "l1_miss_count": 104347565,
+      "l2_hit_count": 85933288,
+      "l2_miss_count": 18414277,
+      "l3_hit_count": 12278577,
+      "l3_miss_count": 6135698,
+      "total_loads": 3351363006,
+      "data_kb": 199.8
     }
   },
   "hardware_info": {
@@ -706,8 +706,8 @@
   },
   "nlp": {
     "accuracy": 0.16666666666666666,
-    "train_time_sec": 0.5078,
-    "predict_time_sec": 0.1394,
+    "train_time_sec": 1.1733,
+    "predict_time_sec": 0.3185,
     "cv_mean_accuracy": 0.16666666666666666,
     "cv_std_accuracy": 0.0,
     "vocab_size": 176440,

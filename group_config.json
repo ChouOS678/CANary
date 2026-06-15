@@ -2,17 +2,25 @@
   "group_id": "G1",
   "group_name": "第1组 基线巡航组",
   "theme": "稳态巡航中夹杂少量异常插针",
+  "group_description": "模拟车辆在高速/城市巡航工况下的 CAN 总线通信场景。正常报文占主体，穿插少量重放与欺骗攻击报文，用于验证模型在低攻击密度下的检出能力。",
   "training_seed": 20260401,
-  "samples_per_label": 8150,
+  "samples_per_label": 3100,
+  "samples_per_label_desc": "每个攻击类别生成的训练样本数。总样本量 = 该值 × 标签类别数（当前 6 类：安全/重放/模糊/欺骗/DoS/UDS）",
   "data_profile": {
     "noise_scale": 1.16,
     "boundary_ratio": 0.12,
     "drift_ratio": 0.09,
     "label_noise_ratio": 0.015
   },
+  "data_profile_desc": {
+    "noise_scale": "特征采样噪声缩放系数。>1.0 表示增大特征波动范围，模拟真实总线信号抖动；值越大训练数据越分散",
+    "boundary_ratio": "边界样本比例。从相邻易混淆类别中混合特征生成难分样本，提升模型在决策边界处的判别力",
+    "drift_ratio": "漂移样本比例。模拟传感器老化、温度漂移等缓慢变化，使特征分布产生轻微偏移",
+    "label_noise_ratio": "标签噪声比例。随机将少量样本标记为相邻类别，模拟人工标注误差，增强模型鲁棒性"
+  },
   "rf_params": {
-    "n_estimators": 147,
-    "max_depth": 8,
+    "n_estimators": 111,
+    "max_depth": 6,
     "min_samples_split": 6,
     "min_samples_leaf": 3,
     "max_features": "sqrt",
@@ -20,66 +28,112 @@
     "class_weight": "balanced_subsample",
     "n_jobs": -1
   },
+  "rf_params_desc": {
+    "n_estimators": "随机森林中决策树的数量。树越多模型越稳定，但训练时间线性增长",
+    "max_depth": "每棵决策树的最大深度。限制深度可防止过拟合，6 层适合中等复杂度分类任务",
+    "min_samples_split": "节点继续分裂所需的最小样本数。值越大越保守，避免对极小样本过度学习",
+    "min_samples_leaf": "叶节点必须保留的最小样本数。保证每个决策叶有足够统计支撑",
+    "max_features": "每次分裂时考虑的最大特征数。'sqrt' 表示取特征总数的平方根，平衡多样性与准确性",
+    "random_state": "随机种子，确保训练结果可复现",
+    "class_weight": "类别权重策略。'balanced_subsample' 在每棵树的自助采样中自动补偿类别不均衡",
+    "n_jobs": "并行线程数。-1 表示使用全部 CPU 核心加速训练"
+  },
   "case_blueprints": [
     {
       "window_id": "G1-W01",
       "timestamp": "2026-03-23T09:00:00",
       "case_name": "巡航基线",
+      "scenario_desc": "车辆处于稳定巡航状态，CAN 总线仅有正常周期性报文，无任何攻击行为。作为整组预测的安全基线对照。",
       "bus": "can0",
       "target_label": "安全",
       "intensity": 0.92,
       "packet_scale": 0.98,
-      "jitter": 0.74
+      "jitter": 0.74,
+      "param_desc": {
+        "intensity": "特征强度 0.92：略低于标准巡航特征，模拟轻载巡航时信号幅值微降",
+        "packet_scale": "报文量系数 0.98：接近标准流量，总报文数约为额定值的 98%",
+        "jitter": "时间抖动 0.74：低抖动，报文到达间隔非常规律，符合稳态巡航特征"
+      }
     },
     {
       "window_id": "G1-W02",
       "timestamp": "2026-03-23T09:05:00",
       "case_name": "缓加速窗口",
+      "scenario_desc": "车辆从巡航转入缓加速阶段，ECU 发送频率略有提升，流量和帧率小幅上升，但仍属正常驾驶行为。",
       "bus": "can0",
       "target_label": "安全",
       "intensity": 0.96,
       "packet_scale": 1.02,
-      "jitter": 0.78
+      "jitter": 0.78,
+      "param_desc": {
+        "intensity": "特征强度 0.96：接近标准值，加速工况下信号特征与巡航差异不大",
+        "packet_scale": "报文量系数 1.02：加速时 ECU 通信量微增，总报文数约为额定值的 102%",
+        "jitter": "时间抖动 0.78：略高于巡航基线，反映加速阶段报文间隔的轻微不规则性"
+      }
     },
     {
       "window_id": "G1-W03",
       "timestamp": "2026-03-23T09:10:00",
       "case_name": "短时重放试探",
+      "scenario_desc": "攻击者短暂接入总线并重放之前截获的合法报文，试探 ECU 响应。持续时间短，重放报文比例低。",
       "bus": "can0",
       "target_label": "重放",
       "intensity": 0.92,
       "packet_scale": 0.96,
-      "jitter": 0.8
+      "jitter": 0.8,
+      "param_desc": {
+        "intensity": "特征强度 0.92：攻击强度偏低，模拟攻击者谨慎的低频试探行为",
+        "packet_scale": "报文量系数 0.96：重放报文替代了部分正常报文，总流量基本不变",
+        "jitter": "时间抖动 0.80：重放报文的时间间隔与原始报文存在微小偏差，抖动略升"
+      }
     },
     {
       "window_id": "G1-W04",
       "timestamp": "2026-03-23T09:15:00",
       "case_name": "匀速巡航",
+      "scenario_desc": "攻击结束后车辆恢复匀速巡航，切换到以太网总线（eth0）进行通信。验证模型对不同总线类型的安全报文识别能力。",
       "bus": "eth0",
       "target_label": "安全",
       "intensity": 0.9,
       "packet_scale": 1.0,
-      "jitter": 0.72
+      "jitter": 0.72,
+      "param_desc": {
+        "intensity": "特征强度 0.90：以太网通信特征与 CAN 存在差异，强度略低",
+        "packet_scale": "报文量系数 1.00：以太网带宽更大但此处仅考察等效流量，取标准值",
+        "jitter": "时间抖动 0.72：以太网交换延迟相对稳定，抖动低于 CAN 总线"
+      }
     },
     {
       "window_id": "G1-W05",
       "timestamp": "2026-03-23T09:20:00",
       "case_name": "身份伪装注入",
+      "scenario_desc": "攻击者通过以太网接口注入伪造的 ECU 身份报文（欺骗攻击），伪装合法节点发送恶意指令，攻击强度较高。",
       "bus": "eth0",
       "target_label": "欺骗",
       "intensity": 0.98,
       "packet_scale": 1.01,
-      "jitter": 0.82
+      "jitter": 0.82,
+      "param_desc": {
+        "intensity": "特征强度 0.98：攻击强度很高，伪造报文特征接近真实报文，识别难度大",
+        "packet_scale": "报文量系数 1.01：注入少量额外伪造报文，总流量几乎无变化，隐蔽性强",
+        "jitter": "时间抖动 0.82：伪造报文的注入时序与正常周期存在偏差，抖动升高是重要检测线索"
+      }
     },
     {
       "window_id": "G1-W06",
       "timestamp": "2026-03-23T09:25:00",
       "case_name": "回归稳定",
+      "scenario_desc": "攻击结束后的恢复阶段，总线通信回归正常巡航状态。验证模型在攻击消退后能否正确恢复安全判定。",
       "bus": "can0",
       "target_label": "安全",
       "intensity": 0.88,
       "packet_scale": 0.97,
-      "jitter": 0.7
+      "jitter": 0.7,
+      "param_desc": {
+        "intensity": "特征强度 0.88：攻击刚结束系统仍在自我校验，特征幅值略低于标准巡航",
+        "packet_scale": "报文量系数 0.97：部分 ECU 正在进行状态重置，通信量轻微下降",
+        "jitter": "时间抖动 0.70：抖动恢复至低位，报文间隔重新趋于规律，标志系统回归稳态"
+      }
     }
   ]
 }

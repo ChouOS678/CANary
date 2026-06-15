@@ -1,6 +1,6 @@
 """算法效能基准测试 — PerfBenchmark 类。
 
-以 CANary（CAN 总线异常检测）场景为背景，提供两种 RandomForest 训练方案的
+以 CANary（CAN 总线时序语义异常检测）场景为背景，提供两种 RandomForest 训练方案的
 数据层效能基准测试：
 
 - 传统 scikit-learn 算法：直接使用 float64 原始特征值训练
@@ -536,23 +536,34 @@ class PerfBenchmark:
         results: dict[str, Any],
     ) -> str:
         """根据实测数据动态生成算法效能对比结论。"""
-        c   = results["sklearn"]
-        e   = results["histogram"]
+        c   = results.get("sklearn", {})
+        e   = results.get("histogram", {})
         bm  = results.get("benchmark", {})
-        mem = results["memory_analysis"]
+        mem = results.get("memory_analysis", {})
         scale = results.get("scale_analysis", [])
         ca    = results.get("cache_analysis", {})
 
         has_benchmark = bool(bm)  # main.py 旧版本可能不保存 benchmark
 
-        n_samples = mem["n_samples"]
-        speedup_train = c["train_time_sec"] / max(e["train_time_sec"], 0.0001)
-        speedup_pred  = c["predict_time_sec"] / max(e["predict_time_sec"], 0.0001)
+        # ── 安全校验：缺失关键数据时返回提示而非崩溃 ──
+        missing = []
+        if not c:
+            missing.append("sklearn")
+        if not e:
+            missing.append("histogram")
+        if not mem:
+            missing.append("memory_analysis")
+        if missing:
+            return f"⚠️ 缺少必要对比数据（{', '.join(missing)}），无法生成结论。请重新运行性能对比测试。"
+
+        n_samples = mem.get("n_samples", 0)
+        speedup_train = c.get("train_time_sec", 0) / max(e.get("train_time_sec", 0), 0.0001)
+        speedup_pred  = c.get("predict_time_sec", 0) / max(e.get("predict_time_sec", 0), 0.0001)
         access_speedup = bm.get("speedup", 0)
 
         # 当前数据量对应的缓存层级
-        f64_kb = mem["float64_total_kb"]
-        u8_kb  = mem["uint8_total_kb"]
+        f64_kb = mem.get("float64_total_kb", 0.0)
+        u8_kb  = mem.get("uint8_total_kb", 0.0)
 
         def _cache_level(kb: float) -> str:
             b = kb * 1024
@@ -579,7 +590,7 @@ class PerfBenchmark:
             "═" * 64,
             "",
             "【当前规模实测分析】",
-            f"  样本量: {n_samples:,}，特征维度: {mem['n_features']}",
+            f"  样本量: {n_samples:,}，特征维度: {mem.get('n_features', '?')}",
         ]
 
         # ── NLP 模型结果（如果存在）──
@@ -589,19 +600,19 @@ class PerfBenchmark:
             lines += [
                 f"  训练耗时: scikit-learn {c['train_time_sec']:.4f}s"
                 f" vs 直方图 {e['train_time_sec']:.4f}s"
-                f" vs NLP-Transformer {nlp['train_time_sec']:.4f}s",
+                f" vs NLP-LogReg/SVC {nlp['train_time_sec']:.4f}s",
                 f"  预测耗时: scikit-learn {c['predict_time_sec']:.4f}s"
                 f" vs 直方图 {e['predict_time_sec']:.4f}s"
-                f" vs NLP-Transformer {nlp.get('predict_time_sec', 0):.4f}s",
+                f" vs NLP-LogReg/SVC {nlp.get('predict_time_sec', 0):.4f}s",
                 f"  scikit-learn 准确率: {c['accuracy']:.4f}",
                 f"  直方图算法准确率: {e['accuracy']:.4f}",
-                f"  NLP-Transformer 准确率: {nlp['accuracy']:.4f}",
-                f"  NLP 模型参数量: {nlp.get('n_params', 0):,}",
+                f"  NLP-LogReg/SVC 准确率: {nlp['accuracy']:.4f}",
+                f"  NLP 模型类型: {nlp.get('model_name', 'logreg')}",
             ]
             nlp_cv = nlp.get("cv_mean_accuracy", 0)
             if nlp_cv:
                 lines.append(
-                    f"  NLP-Transformer CV准确率: {nlp_cv:.4f}"
+                    f"  NLP CV准确率: {nlp_cv:.4f}"
                     f" ± {nlp.get('cv_std_accuracy', 0):.4f}"
                 )
         else:
@@ -622,7 +633,7 @@ class PerfBenchmark:
             f"  (直方图快 {access_speedup:.2f}×)",
             f"  数据集内存: scikit-learn {f64_kb}KB ({f64_level})"
             f" vs 直方图 {u8_kb}KB ({u8_level})"
-            f"  (缩减 {mem['memory_reduction_pct']}%)",
+            f"  (缩减 {mem.get('memory_reduction_pct', 0)}%)",
             "",
         ]
 
@@ -673,7 +684,7 @@ class PerfBenchmark:
             f"  - 使用 float64 原始特征值，当前 {n_samples:,} 样本"
             f"共占 {f64_kb}KB",
         ]
-        if mem["float64_fits_l1d"]:
+        if mem.get("float64_fits_l1d"):
             lines.append(f"  - 当前数据({f64_kb}KB)可驻留 L1D 缓存(32KB)，缓存压力较小")
         elif f64_level == "L2":
             lines.append(f"  - 当前数据({f64_kb}KB)已超出 L1D(32KB)，降级到 L2 缓存")
@@ -691,7 +702,7 @@ class PerfBenchmark:
             f"  - 通过 256 桶离散化，uint8 每样本仅 11 字节，"
             f"当前仅占 {u8_kb}KB",
         ]
-        if mem["uint8_fits_l1d"]:
+        if mem.get("uint8_fits_l1d"):
             lines.append(f"  - 当前数据({u8_kb}KB)可完全驻留 L1D 缓存，"
                          "几乎无缓存未命中")
         elif u8_level == "L2":
@@ -894,7 +905,7 @@ class PerfBenchmark:
                         "  抵消了部分带宽优势。",
                         "",
                         f"  但数据访问层面 uint8 已快 {access_speedup:.2f}×，"
-                        f"  内存占用缩减 {mem['memory_reduction_pct']}%，",
+                        f"  内存占用缩减 {mem.get('memory_reduction_pct', 0)}%",
                         "  直方图算法在资源效率上仍具有明确优势。",
                     ]
             else:
@@ -922,7 +933,7 @@ class PerfBenchmark:
                         "  抵消了部分缓存优势。",
                         "",
                         f"  但数据访问层面 uint8 已快 {access_speedup:.2f}×，"
-                        f"  内存占用缩减 {mem['memory_reduction_pct']}%，",
+                        f"  内存占用缩减 {mem.get('memory_reduction_pct', 0)}%",
                         "  直方图算法在资源效率上仍具有明确优势。",
                     ]
 
@@ -933,25 +944,25 @@ class PerfBenchmark:
             nlp_acc = nlp["accuracy"]
             lines += [
                 "",
-                "【NLP-Transformer 分析】",
+                "【NLP 文本分类分析】",
                 "",
-                f"  NLP-Transformer 将每条 CAN 消息（CAN ID + 数据载荷）视为 token，",
-                f"  整个消息序列作为「句子」，利用多头自注意力机制学习消息间依赖关系。",
+                f"  NLP 文本分类方法将每条 CAN 消息（CAN ID + 数据载荷）视为 token，",
+                f"  整个消息序列拼接为「句子」，通过 TF-IDF 向量化后使用经典线性分类器（{nlp.get('model_name', 'logreg')}）完成识别。",
                 "",
                 f"  与 scikit-learn ({c['accuracy']:.4f}) 和直方图 ({e['accuracy']:.4f}) 相比，",
-                f"  NLP-Transformer 准确率为 {nlp_acc:.4f}"
+                f"  NLP 文本分类准确率为 {nlp_acc:.4f}"
                 f"  ({'更优' if nlp_acc > max(c['accuracy'], e['accuracy']) else '接近' if abs(nlp_acc - max(c['accuracy'], e['accuracy'])) < 0.02 else '稍低'})。",
-                f"  模型参数量: {nlp.get('n_params', 0):,} 个。",
+                f"  特征维度: {nlp.get('n_features', 0)}，词表大小: {nlp.get('vocab_size', 0):,}。",
                 "",
                 "  优势:",
-                "  - 无需人工特征工程，直接从原始 CAN 消息学习表示",
-                "  - 自注意力机制天然适合捕捉序列中的长距离依赖",
-                "  - 可扩展到更大规模 CAN 数据和更多攻击类型",
+                "  - 无需人工特征工程，TF-IDF 自动从 token 化消息中提取特征",
+                "  - 训练速度快，CPU 即可完成，无需 GPU",
+                "  - 适合作为多分类任务的快速基线模型",
                 "",
                 "  劣势:",
-                f"  - 训练耗时较长 ({nlp.get('train_time_sec', 0):.2f}s vs RF ~{c['train_time_sec']:.2f}s)",
-                "  - 需要 GPU 加速才能发挥最佳性能",
-                "  - 模型可解释性不如决策树特征重要性",
+                "  - TF-IDF 仅捕捉词频信息，无法建模序列语义和上下文依赖",
+                "  - 对 CAN 消息序列中的时序关系和长距离依赖建模能力有限",
+                "  - 对标签噪声和罕见 token 敏感，泛化能力弱于决策树集成方法",
             ]
 
         return "\n".join(lines)

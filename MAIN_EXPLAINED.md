@@ -1,15 +1,17 @@
 # `main.py` 讲解
 
+> 项目全称：基于自然语言处理（NLP）与微架构优化的 CAN 总线时序语义异常检测系统
+
 这份脚本的核心流程是：
 
 1. 读取本组配置 `group_config.json`
-2. 读取本组输入数据 `input_cases.json`
+2. 从 `group_config.json` 中的 `case_blueprints` 动态生成预测用例
 3. 生成一批用于训练的合成车载流量样本
 4. 用随机森林做训练
 5. 对本组输入窗口做预测
 6. 计算风险分数、异常包数量等展示指标
 7. 输出 `predictions.json`、`run_summary.txt`
-8. 画三张图
+8. 画 4 张图（状态环形图、时序折线图、堆叠柱图、特征重要性图）
 
 ## 1. 开头导入部分
 
@@ -100,11 +102,11 @@
 ## 7. 预测部分在做什么
 
 - `predict_cases()`
-  把本组 `input_cases.json` 喂给模型，得到预测标签和类别概率。
+  把从 `case_blueprints` 动态生成的预测用例喂给模型，得到预测标签和类别概率。
 - `compute_case_metrics()`
   这一步不是随机森林本体，而是把预测结果进一步转换成风险分数、异常包数量、低中高等级拆分，用来做可视化。
 
-## 8. 三张图怎么来的
+## 8. 4 张图怎么来的
 
 - `render_status_chart()`
   画正常流量和异常攻击的环形图。
@@ -112,6 +114,8 @@
   画时间分布折线图。
 - `render_stacked_bar_chart()`
   画攻击类型 / 等级堆叠柱图。
+- `render_feature_importance_chart()`
+  画随机森林特征重要性排名图。
 
 ## 9. 摘要输出
 
