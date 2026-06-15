@@ -1,0 +1,28 @@
+# ── Python 字节码缓存 ──
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+
+# ── 虚拟环境 ──
+.venv/
+.venv_web313/
+venv/
+env/
+
+# ── 测试缓存 ──
+.pytest_cache/
+
+# ── Matplotlib 字体缓存 ──
+.mplconfig/
+
+# ── 训练/运行产物：不纳入版本控制 ──
+# 目录下一切均为自动化生成：
+#   *.png   — 图表、截图
+#   *.pdf   — 对比报告
+#   *.txt   — 运行摘要、性能分析文本
+#   *.json  — 模型指标、预测结果、运行摘要、对比数据
+#   *.joblib — 训练好的模型文件
+#   *.csv   — 合成训练样本
+#   vtune_results/ — Intel VTune 硬件采集原始数据
+output/
