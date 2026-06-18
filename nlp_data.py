@@ -159,6 +159,94 @@ def _generate_normal_sequence(seq_len: int, rng: np.random.Generator) -> list[di
     return seq
 
 
+def _inject_attack(
+    seq: list[dict[str, Any]],
+    label: str,
+    rng: np.random.Generator,
+    injection_ratio: float = 0.45,
+) -> list[dict[str, Any]]:
+    """根据攻击类型对正常 CAN 序列注入攻击特征。
+
+    每种攻击产生独特的 token 签名，使 TF-IDF + 线性分类器能区分 6 类：
+
+    - 安全: 不注入，保持正常序列
+    - DoS: 固定 ID 0x000 + 极短间隔 + 零载荷 → ID000_D8_P0000_T0
+    - 重放: 连续位置重复同一消息 → 产生重复 token 块
+    - 模糊: 固定畸形 ID + 多变 DLC + 固定 0xAA55 载荷签名 → ID7Fx_Dy_PAA55_T0
+    - 欺骗: 正常 ECU ID + 0xFFFF 载荷 → IDxxx_D8_PFFFF_Tx
+    - UDS非法会话: 诊断 ID + UDS service 载荷 → ID7xx_D8_P10xx_Tx
+    """
+    if label == "安全":
+        return seq
+
+    attacked = list(seq)
+    n = len(attacked)
+    n_inject = max(1, int(n * injection_ratio))
+    indices = rng.integers(0, n, size=n_inject)
+
+    if label == "DoS":
+        # DoS 洪水攻击：固定 ID、极短间隔、零载荷
+        for i in indices:
+            attacked[int(i)] = {
+                "can_id": 0x000,
+                "dlc": 8,
+                "data_byte0": 0,
+                "data_byte1": 0,
+                "data_byte2": 0,
+                "interval_ms": float(rng.uniform(1.0, 3.0)),
+            }
+
+    elif label == "重放":
+        # 重放攻击：选择一条消息，在连续位置重复插入
+        src = dict(attacked[int(rng.integers(0, n))])
+        block_start = int(rng.integers(0, max(1, n - n_inject)))
+        for j in range(n_inject):
+            attacked[(block_start + j) % n] = dict(src)
+
+    elif label == "模糊":
+        # 模糊攻击：固定畸形 ID + 多变 DLC + 固定载荷签名
+        fuzzy_ids = [0x7F0, 0x7F1, 0x7F2, 0x7F3, 0x7F4, 0x7F5, 0x7F6, 0x7F7]
+        for i in indices:
+            attacked[int(i)] = {
+                "can_id": int(rng.choice(fuzzy_ids)),
+                "dlc": int(rng.choice([0, 2, 4, 6, 8])),
+                "data_byte0": 0xAA,
+                "data_byte1": 0x55,
+                "data_byte2": int(rng.integers(0, 256)),
+                "interval_ms": float(rng.uniform(2.0, 8.0)),
+            }
+
+    elif label == "欺骗":
+        # 欺骗攻击：正常 ECU ID + 异常 0xFFFF 载荷
+        all_ids = [uid for ids in ECU_IDS.values() for uid in ids]
+        for i in indices:
+            attacked[int(i)] = {
+                "can_id": int(rng.choice(all_ids)),
+                "dlc": 8,
+                "data_byte0": 0xFF,
+                "data_byte1": 0xFF,
+                "data_byte2": 0xFF,
+                "interval_ms": float(rng.uniform(5.0, 15.0)),
+            }
+
+    elif label == "UDS非法会话":
+        # UDS 非法会话：诊断 ID + UDS service ID 载荷
+        diag_ids = ECU_IDS["diag"]
+        uds_services = [0x10, 0x11, 0x22, 0x27, 0x31, 0x34, 0x36, 0x3E]
+        for i in indices:
+            svc = int(rng.choice(uds_services))
+            attacked[int(i)] = {
+                "can_id": int(rng.choice(diag_ids)),
+                "dlc": 8,
+                "data_byte0": svc,
+                "data_byte1": int(rng.integers(0, 16)),
+                "data_byte2": 0,
+                "interval_ms": float(rng.uniform(10.0, 50.0)),
+            }
+
+    return attacked
+
+
 def generate_can_sequences(group_config: dict[str, object], seq_len: int = 64) -> list[dict[str, Any]]:
     samples_per_label = int(group_config["samples_per_label"])
     seed = int(group_config["training_seed"])
@@ -167,8 +255,31 @@ def generate_can_sequences(group_config: dict[str, object], seq_len: int = 64) -
     for label_idx, label in enumerate(LABELS):
         for _ in range(samples_per_label):
             seq = _generate_normal_sequence(seq_len, rng)
+            seq = _inject_attack(seq, label, rng)
             all_samples.append({"sequence": seq, "label": label, "label_idx": label_idx})
     return all_samples
+
+
+def generate_can_sequences_ood(
+    group_config: dict[str, object],
+    seq_len: int = 64,
+    id_offset: int = 0x10,
+) -> list[dict[str, Any]]:
+    """生成 OOD（Out-of-Distribution）测试数据。
+
+    对正常生成的 CAN 序列中所有消息的 CAN ID 施加统一偏移，
+    使得 token 化后的文本与训练集完全不同（如 ID100 → ID110），
+    但消息的时序模式、payload 分布和攻击签名结构保持不变。
+
+    用途：验证 NLP 词袋模型的封闭词表泛化缺陷。
+    - NLP：OOD token 不在训练词表中 → 准确率大幅下降
+    - RF：统计特征（流量、帧率等）与具体 ID 无关 → 不受影响
+    """
+    samples = generate_can_sequences(group_config, seq_len=seq_len)
+    for sample in samples:
+        for msg in sample["sequence"]:
+            msg["can_id"] = (int(msg["can_id"]) + id_offset) & 0x7FF
+    return samples
 
 
 # ---------------------------------------------------------------------------
@@ -179,9 +290,19 @@ class CanTextVectorizer:
     def __init__(self, config: TokenizationConfig | None = None):
         self.config = config or TokenizationConfig()
         self.vectorizer = (
-            TfidfVectorizer(ngram_range=self.config.ngram_range, lowercase=False)
+            TfidfVectorizer(
+                ngram_range=self.config.ngram_range,
+                lowercase=False,
+                min_df=2,
+                max_features=50000,
+            )
             if self.config.use_tfidf
-            else CountVectorizer(ngram_range=self.config.ngram_range, lowercase=False)
+            else CountVectorizer(
+                ngram_range=self.config.ngram_range,
+                lowercase=False,
+                min_df=2,
+                max_features=50000,
+            )
         )
         self.vocab_size_: int = 0
         self.gpu_available = GPU_AVAILABLE
@@ -219,3 +340,12 @@ def prepare_nlp_dataset(samples: list[dict[str, Any]], seq_len: int = 64) -> dic
         "n_samples": len(samples),
         "gpu_available": GPU_AVAILABLE,
     }
+
+
+def sequences_to_texts(
+    samples: list[dict[str, Any]], seq_len: int = 64
+) -> tuple[list[str], np.ndarray]:
+    """将 CAN 序列样本转为（文本列表, 标签数组），公开接口。"""
+    texts = [_window_to_text(sample["sequence"], seq_len) for sample in samples]
+    labels = np.asarray([sample["label_idx"] for sample in samples], dtype=np.int64)
+    return texts, labels

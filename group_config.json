@@ -4,7 +4,7 @@
   "theme": "稳态巡航中夹杂少量异常插针",
   "group_description": "模拟车辆在高速/城市巡航工况下的 CAN 总线通信场景。正常报文占主体，穿插少量重放与欺骗攻击报文，用于验证模型在低攻击密度下的检出能力。",
   "training_seed": 20260401,
-  "samples_per_label": 3100,
+  "samples_per_label": 3000,
   "samples_per_label_desc": "每个攻击类别生成的训练样本数。总样本量 = 该值 × 标签类别数（当前 6 类：安全/重放/模糊/欺骗/DoS/UDS）",
   "data_profile": {
     "noise_scale": 1.16,
@@ -19,7 +19,7 @@
     "label_noise_ratio": "标签噪声比例。随机将少量样本标记为相邻类别，模拟人工标注误差，增强模型鲁棒性"
   },
   "rf_params": {
-    "n_estimators": 111,
+    "n_estimators": 134,
     "max_depth": 6,
     "min_samples_split": 6,
     "min_samples_leaf": 3,
