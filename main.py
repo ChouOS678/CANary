@@ -9,7 +9,7 @@ This module orchestrates the full pipeline:
 
 Usage:
     python main.py                  # 标准模式（对照组 float64 列主序）
-    python main.py --compare        # 对比模式（对照组 vs 实验组 uint8 直方图）
+    python main.py --compare        # 对比模式（三路 A/B/C：float64 RF vs uint8 直方图 vs NLP 文本分类）
 """
 
 from __future__ import annotations

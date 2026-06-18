@@ -52,27 +52,6 @@ def _window_to_text(sequence: list[dict[str, Any]], max_seq_len: int) -> str:
     return " ".join(tokens)
 
 
-def generate_can_text_samples(
-    group_config: dict[str, object],
-    seq_len: int = 64,
-) -> list[dict[str, Any]]:
-    """生成 CAN 文本样本。"""
-    from nlp_data import generate_can_sequences  # 复用序列生成逻辑
-
-    samples = generate_can_sequences(group_config, seq_len=seq_len)
-    text_samples: list[dict[str, Any]] = []
-    for item in samples:
-        text_samples.append(
-            {
-                "text": _window_to_text(item["sequence"], seq_len),
-                "label": item["label"],
-                "label_idx": item["label_idx"],
-                "sequence": item["sequence"],
-            }
-        )
-    return text_samples
-
-
 # ---------------------------------------------------------------------------
 # 原始 CAN 序列生成逻辑
 # ---------------------------------------------------------------------------
